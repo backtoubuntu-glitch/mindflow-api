@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to MindFlow - Get Started</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        .onboarding-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .onboarding-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .onboarding-header {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .onboarding-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon-large {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo-text-large {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--accent), #fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .onboarding-content {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .onboarding-steps {
+            flex: 1;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .onboarding-sidebar {
+            width: 300px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .step {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step-header {
+            margin-bottom: 2rem;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            opacity: 0.8;
+            margin-bottom: 2rem;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .avatar-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .avatar-option {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .avatar-option.selected .avatar-image {
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .avatar-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-image i {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        .onboarding-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-feature {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-avatar {
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 201, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--accent);
+        }
+
+        .sidebar-avatar i {
+            font-size: 3rem;
+            color: var(--accent);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .voice-demo {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .voice-btn {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 20px rgba(0, 201, 255, 0.3);
+        }
+
+        .voice-btn.listening {
+            animation: pulse 1s infinite;
+            background: var(--success);
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div class="onboarding-card">
+            <div class="onboarding-header">
+                <div class="onboarding-logo">
+                    <i class="fas fa-brain logo-icon-large"></i>
+                    <span class="logo-text-large">MindFlow</span>
+                </div>
+                <p>Let's set up your personalized learning experience</p>
+            </div>
+
+            <div class="onboarding-content">
+                <div class="onboarding-steps">
+                    <!-- Step 1: Welcome -->
+                    <div class="step active" data-step="1">
+                        <div class="step-header">
+                            <span class="step-number">1</span>
+                            <h2 class="step-title">Welcome to MindFlow! 🎉</h2>
+                            <p class="step-description">Get ready for an amazing learning journey powered by AI</p>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <h4>Khensani AI</h4>
+                                <p>Your personal learning assistant</p>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chess-knight"></i>
+                                </div>
+                                <h4>Interactive Games</h4>
+                                <p>Learn through play and strategy</p>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h4>Safe Learning</h4>
+                                <p>Protected environment with monitoring</p>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h4>Progress Tracking</h4>
+                                <p>Watch your skills grow</p>
+                            </div>
+                        </div>
+
+                        <div class="voice-demo">
+                            <h4>Meet Khensani AI</h4>
+                            <p>Click to hear your AI assistant</p>
+                            <button class="voice-btn" id="voiceDemo">
+                                <i class="fas fa-robot"></i>
+                            </button>
+                            <p class="voice-status" id="voiceStatus">Ready to greet you!</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Avatar & Profile -->
+                    <div class="step" data-step="2">
+                        <div class="step-header">
+                            <span class="step-number">2</span>
+                            <h2 class="step-title">Create Your Avatar</h2>
+                            <p class="step-description">Choose how you want to appear in the MindFlow world</p>
+                        </div>
+
+                        <div class="avatar-selection">
+                            <div class="avatar-option selected" data-avatar="robot">
+                                <div class="avatar-image">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <span>AI Explorer</span>
+                            </div>
+                            <div class="avatar-option" data-avatar="graduate">
+                                <div class="avatar-image">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <span>Scholar</span>
+                            </div>
+                            <div class="avatar-option" data-avatar="astronaut">
+                                <div class="avatar-image">
+                                    <i class="fas fa-user-astronaut"></i>
+                                </div>
+                                <span>Space Explorer</span>
+                            </div>
+                            <div class="avatar-option" data-avatar="wizard">
+                                <div class="avatar-image">
+                                    <i class="fas fa-hat-wizard"></i>
+                                </div>
+                                <span>Math Wizard</span>
+                            </div>
+                            <div class="avatar-option" data-avatar="scientist">
+                                <div class="avatar-image">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <span>Young Scientist</span>
+                            </div>
+                            <div class="avatar-option" data-avatar="knight">
+                                <div class="avatar-image">
+                                    <i class="fas fa-chess-knight"></i>
+                                </div>
+                                <span>Chess Knight</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="displayName">What should we call you?</label>
+                            <input type="text" id="displayName" placeholder="Enter your display name" value="Lerato">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="learningGoal">What do you want to achieve?</label>
+                            <select id="learningGoal" class="form-select">
+                                <option value="improve_grades">Improve my school grades</option>
+                                <option value="learn_chess">Become better at chess</option>
+                                <option value="coding">Learn programming and robotics</option>
+                                <option value="all_subjects">Excel in all subjects</option>
+                                <option value="have_fun">Learn while having fun</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Safety Setup -->
+                    <div class="step" data-step="3">
+                        <div class="step-header">
+                            <span class="step-number">3</span>
+                            <h2 class="step-title">Safety First 🛡️</h2>
+                            <p class="step-description">Set up safety features for a protected learning experience</p>
+                        </div>
+
+                        <div class="feature-grid">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <h4>Location Tracking</h4>
+                                <p>Safe zone monitoring</p>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-bell"></i>
+                                </div>
+                                <h4>Notifications</h4>
+                                <p>Arrival/departure alerts</p>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h4>Time Limits</h4>
+                                <p>Healthy screen time</p>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4>Parent Connect</h4>
+                                <p>Share progress updates</p>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="safety-note">
+                            <i class="fas fa-info-circle"></i>
+                            <p>These safety features help create a secure learning environment. Parents can adjust settings anytime.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Ready to Start -->
+                    <div class="step" data-step="4">
+                        <div class="step-header">
+                            <span class="step-number">4</span>
+                            <h2 class="step-title">You're All Set! 🚀</h2>
+                            <p class="step-description">Your MindFlow journey is ready to begin</p>
+                        </div>
+
+                        <div class="completion-summary">
+                            <div class="summary-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Profile created successfully</span>
+                            </div>
+                            <div class="summary-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Khensani AI activated</span>
+                            </div>
+                            <div class="summary-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Safety features enabled</span>
+                            </div>
+                            <div class="summary-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Personalized learning path ready</span>
+                            </div>
+                        </div>
+
+                        <div class="welcome-message glass-morphism">
+                            <div class="ai-avatar-large">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="welcome-text">
+                                <h4>Hello, <span id="finalName">Lerato</span>!</h4>
+                                <p>I'm Khensani, your AI learning assistant. I'm excited to help you explore mathematics, science, chess, and robotics. Let's make learning an adventure!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="onboardingProgress" style="width: 25%"></div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="onboarding-navigation">
+                        <button class="btn btn-secondary" id="prevBtn" style="display: none;">
+                            <i class="fas fa-arrow-left"></i>
+                            Back
+                        </button>
+                        <div class="step-indicator">
+                            Step <span id="currentStep">1</span> of 4
+                        </div>
+                        <button class="btn btn-primary" id="nextBtn">
+                            Continue
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button class="btn btn-success" id="completeBtn" style="display: none;">
+                            <i class="fas fa-rocket"></i>
+                            Start Learning
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="onboarding-sidebar">
+                    <div class="sidebar-feature">
+                        <div class="sidebar-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Khensani AI</h3>
+                        <p>Your personal learning companion</p>
+                    </div>
+
+                    <div class="sidebar-tips">
+                        <h4>Quick Tips</h4>
+                        <div class="tip-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <p>Complete daily challenges to earn points and badges</p>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-chess-board"></i>
+                            <p>Practice chess to improve strategic thinking</p>
+                        </div>
+                        <div class="tip-item">
+                            <i class="fas fa-microphone"></i>
+                            <p>Use voice commands to interact with Khensani AI</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const steps = document.querySelectorAll('.step');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const completeBtn = document.getElementById('completeBtn');
+            const currentStepEl = document.getElementById('currentStep');
+            const progressFill = document.getElementById('onboardingProgress');
+            let currentStep = 1;
+
+            // Avatar selection
+            const avatarOptions = document.querySelectorAll('.avatar-option');
+            avatarOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    avatarOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Voice demo
+            const voiceBtn = document.getElementById('voiceDemo');
+            const voiceStatus = document.getElementById('voiceStatus');
+            
+            voiceBtn.addEventListener('click', function() {
+                this.classList.add('listening');
+                voiceStatus.textContent = "Hello! I'm Khensani, your AI learning assistant...";
+                
+                setTimeout(() => {
+                    this.classList.remove('listening');
+                    voiceStatus.textContent = "Ready to help you learn!";
+                }, 3000);
+            });
+
+            // Navigation
+            nextBtn.addEventListener('click', function() {
+                if (currentStep < steps.length) {
+                    steps[currentStep - 1].classList.remove('active');
+                    currentStep++;
+                    steps[currentStep - 1].classList.add('active');
+                    updateNavigation();
+                }
+            });
+
+            prevBtn.addEventListener('click', function() {
+                if (currentStep > 1) {
+                    steps[currentStep - 1].classList.remove('active');
+                    currentStep--;
+                    steps[currentStep - 1].classList.add('active');
+                    updateNavigation();
+                }
+            });
+
+            completeBtn.addEventListener('click', function() {
+                // Save onboarding data and redirect
+                const displayName = document.getElementById('displayName').value;
+                localStorage.setItem('mindflow_user', JSON.stringify({
+                    name: displayName,
+                    avatar: document.querySelector('.avatar-option.selected').dataset.avatar,
+                    onboardingComplete: true
+                }));
+                
+                window.location.href = 'dashboard.html';
+            });
+
+            function updateNavigation() {
+                currentStepEl.textContent = currentStep;
+                progressFill.style.width = `${(currentStep / steps.length) * 100}%`;
+                
+                prevBtn.style.display = currentStep > 1 ? 'flex' : 'none';
+                nextBtn.style.display = currentStep < steps.length ? 'flex' : 'none';
+                completeBtn.style.display = currentStep === steps.length ? 'flex' : 'none';
+
+                // Update final name in welcome message
+                if (currentStep === 4) {
+                    const finalName = document.getElementById('finalName');
+                    const displayName = document.getElementById('displayName').value;
+                    finalName.textContent = displayName;
+                }
+            }
+
+            // Initialize
+            updateNavigation();
+        });
+    </script>
+</body>
+</html>

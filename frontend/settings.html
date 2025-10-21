@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - MindFlow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <style>
+        .settings-hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem 0;
+            color: white;
+        }
+
+        .settings-container {
+            padding: 2rem 0;
+            background: #f8fafc;
+            min-height: 80vh;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .settings-sidebar {
+            position: sticky;
+            top: 2rem;
+        }
+
+        .settings-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-item:hover {
+            background: var(--light);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .settings-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .section-header h2 {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark);
+        }
+
+        .section-header p {
+            margin: 0;
+            opacity: 0.7;
+        }
+
+        .settings-group {
+            margin-bottom: 2rem;
+        }
+
+        .settings-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .settings-group h3 {
+            margin: 0 0 1rem 0;
+            color: var(--dark);
+            font-size: 1.2rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-info h4 {
+            margin: 0 0 0.3rem 0;
+            font-size: 1rem;
+        }
+
+        .setting-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .theme-option {
+            text-align: center;
+            padding: 1.5rem;
+            border: 2px solid var(--light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-option:hover {
+            border-color: var(--primary);
+        }
+
+        .theme-option.active {
+            border-color: var(--primary);
+            background: var(--light);
+        }
+
+        .theme-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .theme-light .theme-preview {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        .theme-dark .theme-preview {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+        }
+
+        .theme-auto .theme-preview {
+            background: linear-gradient(135deg, #6a11cb, #00c9ff);
+            color: white;
+        }
+
+        .notification-types {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .notification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .privacy-settings {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .privacy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .privacy-item:last-child {
+            border-bottom: none;
+        }
+
+        .danger-zone {
+            background: #fee2e2;
+            border: 2px solid #fecaca;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .danger-zone h3 {
+            color: #dc2626;
+            margin: 0 0 1rem 0;
+        }
+
+        .danger-zone p {
+            margin: 0 0 1.5rem 0;
+            opacity: 0.8;
+        }
+
+        .danger-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .settings-sidebar {
+                position: static;
+            }
+
+            .theme-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-container"></div>
+
+    <!-- Hero Section -->
+    <section class="settings-hero">
+        <div class="container">
+            <h1>Settings</h1>
+            <p>Customize your MindFlow experience</p>
+        </div>
+    </section>
+
+    <main class="settings-container">
+        <div class="container">
+            <div class="settings-grid">
+                <!-- Settings Navigation -->
+                <div class="settings-sidebar">
+                    <div class="settings-nav">
+                        <button class="nav-item active" data-section="general">
+                            <i class="fas fa-cog"></i>
+                            General
+                        </button>
+                        <button class="nav-item" data-section="appearance">
+                            <i class="fas fa-palette"></i>
+                            Appearance
+                        </button>
+                        <button class="nav-item" data-section="notifications">
+                            <i class="fas fa-bell"></i>
+                            Notifications
+                        </button>
+                        <button class="nav-item" data-section="privacy">
+                            <i class="fas fa-shield-alt"></i>
+                            Privacy & Safety
+                        </button>
+                        <button class="nav-item" data-section="ai">
+                            <i class="fas fa-robot"></i>
+                            Khensani AI
+                        </button>
+                        <button class="nav-item" data-section="account">
+                            <i class="fas fa-user"></i>
+                            Account
+                        </button>
+                        <button class="nav-item" data-section="help">
+                            <i class="fas fa-question-circle"></i>
+                            Help & Support
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Settings Content -->
+                <div class="settings-content">
+                    <!-- General Settings -->
+                    <div class="settings-section active" id="general">
+                        <div class="section-header">
+                            <h2>General Settings</h2>
+                            <p>Manage your basic account preferences</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Account Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="fullName">Full Name</label>
+                                    <input type="text" id="fullName" value="Lerato Dube">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" value="lerato.dube@student.mindflow.ai">
+                                </div>
+                                <div class="form-group">
+                                    <label for="gradeLevel">Grade Level</label>
+                                    <select id="gradeLevel">
+                                        <option value="4" selected>Grade 4</option>
+                                        <option value="5">Grade 5</option>
+                                        <option value="6">Grade 6</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="language">Preferred Language</label>
+                                    <select id="language">
+                                        <option value="en" selected>English</option>
+                                        <option value="af">Afrikaans</option>
+                                        <option value="zu">Zulu</option>
+                                        <option value="xh">Xhosa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Learning Preferences</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Daily Learning Goals</h4>
+                                    <p>Set your target learning time per day</p>
+                                </div>
+                                <select class="form-select">
+                                    <option value="30">30 minutes</option>
+                                    <option value="45" selected>45 minutes</option>
+                                    <option value="60">1 hour</option>
+                                    <option value="90">1.5 hours</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Learning Pace</h4>
+                                    <p>Adjust how quickly you progress through lessons</p>
+                                </div>
+                                <select class="form-select">
+                                    <option value="slow">Slow and steady</option>
+                                    <option value="medium" selected>Balanced pace</option>
+                                    <option value="fast">Accelerated learning</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Changes
+                        </button>
+                    </div>
+
+                    <!-- Appearance Settings -->
+                    <div class="settings-section" id="appearance">
+                        <div class="section-header">
+                            <h2>Appearance</h2>
+                            <p>Customize how MindFlow looks and feels</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Theme</h3>
+                            <p>Choose your preferred color theme</p>
+                            <div class="theme-options">
+                                <div class="theme-option theme-light active" data-theme="light">
+                                    <div class="theme-preview">
+                                        <i class="fas fa-sun"></i>
+                                    </div>
+                                    <div class="theme-name">Light</div>
+                                </div>
+                                <div class="theme-option theme-dark" data-theme="dark">
+                                    <div class="theme-preview">
+                                        <i class="fas fa-moon"></i>
+                                    </div>
+                                    <div class="theme-name">Dark</div>
+                                </div>
+                                <div class="theme-option theme-auto" data-theme="auto">
+                                    <div class="theme-preview">
+                                        <i class="fas fa-adjust"></i>
+                                    </div>
+                                    <div class="theme-name">Auto</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Font Size</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Text Size</h4>
+                                    <p>Adjust the size of text throughout the app</p>
+                                </div>
+                                <select class="form-select">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                    <option value="xlarge">Extra Large</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Animations</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Interface Animations</h4>
+                                    <p>Enable smooth transitions and animations</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Reduced Motion</h4>
+                                    <p>Minimize animations for accessibility</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications Settings -->
+                    <div class="settings-section" id="notifications">
+                        <div class="section-header">
+                            <h2>Notifications</h2>
+                            <p>Manage how and when you receive notifications</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Notification Preferences</h3>
+                            <div class="notification-types">
+                                <div class="notification-item">
+                                    <div class="setting-info">
+                                        <h4>Learning Reminders</h4>
+                                        <p>Daily reminders to continue your lessons</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="setting-info">
+                                        <h4>Progress Updates</h4>
+                                        <p>Weekly reports on your learning progress</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="setting-info">
+                                        <h4>Khensani AI Tips</h4>
+                                        <p>Personalized learning suggestions</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="notification-item">
+                                    <div class="setting-info">
+                                        <h4>Safety Alerts</h4>
+                                        <p>Important safety notifications</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Quiet Hours</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Enable Quiet Hours</h4>
+                                    <p>Pause notifications during specific times</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Privacy & Safety Settings -->
+                    <div class="settings-section" id="privacy">
+                        <div class="section-header">
+                            <h2>Privacy & Safety</h2>
+                            <p>Control your data and safety features</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Safety Features</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Location Tracking</h4>
+                                    <p>Enable safe zone monitoring</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Parent Notifications</h4>
+                                    <p>Share progress with parents/guardians</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Data Privacy</h3>
+                            <div class="privacy-settings">
+                                <div class="privacy-item">
+                                    <span>Data Collection</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="privacy-item">
+                                    <span>Personalized Ads</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="privacy-item">
+                                    <span>Research Participation</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="danger-zone">
+                            <h3>Danger Zone</h3>
+                            <p>These actions are irreversible. Please proceed with caution.</p>
+                            <div class="danger-actions">
+                                <button class="btn btn-warning">
+                                    <i class="fas fa-download"></i>
+                                    Export My Data
+                                </button>
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                    Delete Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Khensani AI Settings -->
+                    <div class="settings-section" id="ai">
+                        <div class="section-header">
+                            <h2>Khensani AI Assistant</h2>
+                            <p>Customize your AI learning companion</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>AI Personality</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Assistant Voice</h4>
+                                    <p>Choose Khensani's speaking voice</p>
+                                </div>
+                                <select class="form-select">
+                                    <option value="friendly" selected>Friendly and Encouraging</option>
+                                    <option value="professional">Professional and Clear</option>
+                                    <option value="enthusiastic">Enthusiastic and Energetic</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Interaction Style</h4>
+                                    <p>How Khensani communicates with you</p>
+                                </div>
+                                <select class="form-select">
+                                    <option value="guided" selected>Step-by-step Guidance</option>
+                                    <option value="exploratory">Encourage Exploration</option>
+                                    <option value="challenging">Challenge and Push</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>AI Capabilities</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Voice Commands</h4>
+                                    <p>Enable speaking to Khensani</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Adaptive Difficulty</h4>
+                                    <p>Let Khensani adjust challenge level</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Progress Predictions</h4>
+                                    <p>Get AI insights on your learning path</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Settings -->
+                    <div class="settings-section" id="account">
+                        <div class="section-header">
+                            <h2>Account Management</h2>
+                            <p>Manage your account security and subscription</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Security</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add extra security to your account</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-key"></i>
+                                Change Password
+                            </button>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Subscription</h3>
+                            <div class="subscription-card glass-morphism">
+                                <div class="subscription-info">
+                                    <h4>Free Plan</h4>
+                                    <p>Full access to all learning features</p>
+                                    <div class="subscription-features">
+                                        <div class="feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Complete curriculum</span>
+                                        </div>
+                                        <div class="feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Khensani AI assistant</span>
+                                        </div>
+                                        <div class="feature">
+                                            <i class="fas fa-check"></i>
+                                            <span>Safety features</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary">
+                                    Upgrade to Premium
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Help & Support Settings -->
+                    <div class="settings-section" id="help">
+                        <div class="section-header">
+                            <h2>Help & Support</h2>
+                            <p>Get help and learn about MindFlow</p>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>Resources</h3>
+                            <div class="help-links">
+                                <a href="help-center.html" class="help-link">
+                                    <i class="fas fa-question-circle"></i>
+                                    Help Center
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-book"></i>
+                                    User Guide
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-video"></i>
+                                    Video Tutorials
+                                </a>
+                                <a href="#" class="help-link">
+                                    <i class="fas fa-comments"></i>
+                                    Contact Support
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <h3>About MindFlow</h3>
+                            <div class="about-info">
+                                <p><strong>Version:</strong> 1.0.0</p>
+                                <p><strong>Last Updated:</strong> December 2023</p>
+                                <p><strong>Developer:</strong> MindTech Innovations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComponent('header-container', 'components/header.html');
+            loadComponent('footer-container', 'components/footer.html');
+
+            // Settings navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.settings-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const sectionId = this.dataset.section;
+                    
+                    // Update active nav item
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Theme selection
+            const themeOptions = document.querySelectorAll('.theme-option');
+            themeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    themeOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    const theme = this.dataset.theme;
+                    // Apply theme logic would go here
+                    console.log('Theme changed to:', theme);
+                });
+            });
+
+            // Toggle switches
+            const toggleSwitches = document.querySelectorAll('.toggle-switch input');
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    console.log('Setting changed:', this.checked);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+﻿{
+  \"version\": \"2\",
+  \"name\": \"mindflow-backend\",
+  \"builds\": [
+    {
+      \"src\": \"package.json\",
+      \"use\": \"@render/nodejs\"
+    }
+  ],
+  \"routes\": [
+    {
+      \"src\": \"/(.*)\",
+      \"dest\": \"/server.js\"
+    }
+  ],
+  \"env\": {
+    \"NODE_ENV\": \"production\",
+    \"CLIENT_URL\": \"https://mindflow-ai.vercel.app\"
+  }
+}

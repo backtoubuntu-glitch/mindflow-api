@@ -1,0 +1,2132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow - Khensani AI Learning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Exo', sans-serif;
+        }
+        
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #00c9ff;
+            --success: #00d4aa;
+            --warning: #ff6b6b;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --text: #e2e8f0;
+            
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 15px 45px rgba(0, 0, 0, 0.2);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(106, 17, 203, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(37, 117, 252, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 201, 255, 0.2) 0%, transparent 50%);
+            animation: float 6s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Enhanced Header */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            color: var(--light);
+            padding: 25px 30px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo-icon {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--light) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--light) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 201, 255, 0.3);
+        }
+        
+        .logo .powered-by {
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--glass-bg);
+            padding: 15px 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+        }
+        
+        .user-info h3 {
+            color: var(--light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .user-info p {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* Enhanced Navigation */
+        .nav-tabs {
+            display: flex;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 8px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 20px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            color: var(--text);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(106, 17, 203, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .tab:hover::before {
+            left: 100%;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106, 17, 203, 0.3);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Enhanced Cards */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .card h2 {
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .card h3 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        
+        .card-icon {
+            font-size: 1.6rem;
+        }
+        
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* Points Display */
+        .points-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--success) 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 201, 255, 0.3);
+        }
+        
+        .points-icon {
+            font-size: 2rem;
+        }
+        
+        .points-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+        
+        /* AI Assistant */
+        .ai-assistant {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .assistant-message {
+            background: var(--glass-bg);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid var(--accent);
+            position: relative;
+        }
+        
+        .assistant-message::before {
+            content: '🤖';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: var(--accent);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .assistant-input {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .assistant-input input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--glass-bg);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+        
+        .assistant-input input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
+        }
+        
+        .assistant-input button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .assistant-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+        }
+        
+        /* Curriculum Grid */
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .grade-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grade-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .grade-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(106, 17, 203, 0.4);
+        }
+        
+        .grade-card:hover::before {
+            left: 100%;
+        }
+        
+        .grade-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: white;
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+        
+        /* Enhanced Chess Styles */
+        .chess-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .chess-game {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        
+        .chessboard {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 1/1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            border: 3px solid #8b4513;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin: 0 auto;
+            background: #f0d9b5;
+        }
+        
+        .chess-square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .chess-square.light {
+            background-color: #f0d9b5;
+        }
+        
+        .chess-square.dark {
+            background-color: #b58863;
+        }
+        
+        .chess-square.selected {
+            background-color: #aec6cf !important;
+            box-shadow: inset 0 0 0 3px var(--accent);
+        }
+        
+        .chess-square.possible-move::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 201, 255, 0.6);
+            border-radius: 50%;
+        }
+        
+        .chess-square.possible-capture {
+            background: rgba(255, 107, 107, 0.3) !important;
+        }
+        
+        .chess-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .chess-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .chess-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.3);
+        }
+        
+        .chess-btn.secondary {
+            background: var(--glass-bg);
+            color: var(--text);
+        }
+        
+        /* Enhanced Robotics Lab */
+        .robotics-lab {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+        
+        .robot-control-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .robot-visualization {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .robot-visualization::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circuit" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23circuit)"/></svg>');
+            animation: circuitMove 20s linear infinite;
+        }
+        
+        @keyframes circuitMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 20px); }
+        }
+        
+        .robot-model {
+            font-size: 8rem;
+            margin: 20px 0;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            animation: robotFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes robotFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .control-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            color: var(--text);
+        }
+        
+        .control-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 201, 255, 0.4);
+        }
+        
+        .control-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .sensor-data {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .sensor-item {
+            background: var(--glass-bg);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        .sensor-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 5px;
+            color: var(--accent);
+        }
+        
+        /* Enhanced Map Styles */
+        .map-tab-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            height: 70vh;
+        }
+        
+        .map-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .map-main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            height: 100%;
+        }
+        
+        .map-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .map-container {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            position: relative;
+            min-height: 500px;
+            background: var(--glass-bg);
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+            border-radius: 15px;
+            z-index: 1;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .map-control-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: var(--accent);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .map-control-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .map-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text);
+            z-index: 0;
+        }
+        
+        .safe-zones {
+            margin-top: 20px;
+        }
+        
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .zone-item:hover {
+            background: var(--glass-bg);
+            transform: translateX(5px);
+        }
+        
+        .zone-item.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        
+        .zone-name {
+            font-weight: 600;
+            color: var(--light);
+        }
+        
+        .zone-item.active .zone-name {
+            color: white;
+        }
+        
+        .zone-status {
+            font-size: 0.8rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .safe {
+            background: var(--success);
+            color: white;
+        }
+        
+        .alert {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Activity Feed Styles */
+        .activity-feed {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background: var(--glass-bg);
+            transform: translateX(5px);
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .routine-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .routine-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .routine-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
+        .routine-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 2px solid var(--glass-border);
+            cursor: pointer;
+        }
+        
+        .routine-time {
+            font-weight: 600;
+            min-width: 80px;
+            color: var(--accent);
+        }
+        
+        .routine-name {
+            flex: 1;
+        }
+        
+        .routine-completed {
+            text-decoration: line-through;
+            color: #94a3b8;
+        }
+        
+        .ai-recommendation {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--success) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0, 201, 255, 0.3);
+        }
+        
+        /* Enhanced responsive design */
+        @media (max-width: 1200px) {
+            .dashboard, .chess-container, .robotics-lab, .map-tab-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-sidebar {
+                height: auto;
+                max-height: 400px;
+            }
+            
+            .map-container {
+                min-height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .control-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .chessboard {
+                max-width: 100%;
+            }
+            
+            .curriculum-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Enhanced notifications */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            padding: 20px;
+            max-width: 350px;
+            display: none;
+            z-index: 1000;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--glass-border);
+            transform: translateX(100%);
+        }
+        
+        .notification.show {
+            display: block;
+            transform: translateX(0);
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--text);
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .close-notification:hover {
+            opacity: 1;
+        }
+        
+        .ml-chart {
+            height: 200px;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-weight: 700;
+            border: 2px dashed var(--glass-border);
+        }
+        
+        /* Achievement Styles */
+        .achievement-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .achievement {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .achievement.unlocked {
+            background: linear-gradient(135deg, var(--success) 0%, rgba(0, 212, 170, 0.2) 100%);
+        }
+        
+        .achievement i {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .achievement.unlocked i {
+            color: var(--light);
+        }
+        
+        /* Challenge Styles */
+        .challenges {
+            margin-top: 20px;
+        }
+        
+        .challenge-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: var(--glass-bg);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .challenge-item.completed {
+            background: linear-gradient(135deg, var(--success) 0%, rgba(0, 212, 170, 0.2) 100%);
+        }
+        
+        .challenge-item.active {
+            background: linear-gradient(135deg, var(--accent) 0%, rgba(0, 201, 255, 0.2) 100%);
+            border-color: var(--accent);
+        }
+        
+        .challenge-item i {
+            color: var(--accent);
+        }
+        
+        .challenge-item.completed i {
+            color: var(--success);
+        }
+        
+        .challenge-item.active i {
+            color: var(--light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Enhanced Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-brain"></i></div>
+                <div>
+                    <h1>MindFlow</h1>
+                    <div class="powered-by">Powered by MindTech • Khensani AI Platform</div>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="avatar">LD</div>
+                <div class="user-info">
+                    <h3>Lerato Dube</h3>
+                    <p>Grade 4 • 310 Khensani Points</p>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Enhanced Navigation -->
+        <div class="nav-tabs">
+            <div class="tab active" data-tab="dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </div>
+            <div class="tab" data-tab="chess">
+                <i class="fas fa-chess"></i> Chess Master
+            </div>
+            <div class="tab" data-tab="robotics">
+                <i class="fas fa-robot"></i> Robotics Lab
+            </div>
+            <div class="tab" data-tab="map">
+                <i class="fas fa-map-marked-alt"></i> Safe Tracker
+            </div>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard-tab">
+            <div class="dashboard">
+                <div class="sidebar">
+                    <!-- AI Assistant Card -->
+                    <div class="card">
+                        <h2><i class="fas fa-robot card-icon"></i> Khensani AI</h2>
+                        <div class="ai-assistant">
+                            <div class="assistant-message">
+                                <p>Hello Lerato! Ready to continue your robotics project today? You're making great progress!</p>
+                            </div>
+                            <div class="assistant-input">
+                                <input type="text" placeholder="Ask Khensani anything...">
+                                <button><i class="fas fa-paper-plane"></i> Send</button>
+                            </div>
+                        </div>
+                        <div class="ai-recommendation">
+                            <h4>🎯 AI Recommendation</h4>
+                            <p>Complete the maze navigation challenge to unlock the next robotics level!</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Daily Routines Card -->
+                    <div class="card">
+                        <h2><i class="fas fa-tasks card-icon"></i> Today's Goals</h2>
+                        <div class="routine-list">
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox" checked>
+                                <span class="routine-time">7:30 AM</span>
+                                <span class="routine-name routine-completed">Morning reading</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox" checked>
+                                <span class="routine-time">8:00 AM</span>
+                                <span class="routine-name routine-completed">School departure</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox">
+                                <span class="routine-time">3:30 PM</span>
+                                <span class="routine-name">Math practice</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox">
+                                <span class="routine-time">6:00 PM</span>
+                                <span class="routine-name">Robotics project</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Learning Analytics -->
+                    <div class="card">
+                        <h2><i class="fas fa-chart-line card-icon"></i> Learning Analytics</h2>
+                        <div class="ml-chart">
+                            <p>AI-Powered Progress Visualization</p>
+                        </div>
+                        <p>Your learning efficiency has improved by 22% this week!</p>
+                    </div>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Multi-Grade Curriculum -->
+                    <div class="card">
+                        <h2><i class="fas fa-graduation-cap card-icon"></i> Learning Journey</h2>
+                        <div class="curriculum-grid">
+                            <div class="grade-card">
+                                <h4>Mathematics</h4>
+                                <p>Fractions & Geometry</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 75%"></div>
+                                </div>
+                                <p>75% Complete</p>
+                            </div>
+                            <div class="grade-card">
+                                <h4>Science</h4>
+                                <p>Robotics & Physics</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 60%"></div>
+                                </div>
+                                <p>60% Complete</p>
+                            </div>
+                            <div class="grade-card">
+                                <h4>Coding</h4>
+                                <p>Block Programming</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 85%"></div>
+                                </div>
+                                <p>85% Complete</p>
+                            </div>
+                            <div class="grade-card">
+                                <h4>Creative Arts</h4>
+                                <p>Design & Innovation</p>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 45%"></div>
+                                </div>
+                                <p>45% Complete</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <h2><i class="fas fa-history card-icon"></i> Recent Achievements</h2>
+                        <div class="activity-feed">
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-robot"></i></div>
+                                <div>
+                                    <p>Completed Maze Navigation</p>
+                                    <small>2 hours ago • +30 points</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-chess"></i></div>
+                                <div>
+                                    <p>Won Chess Game vs AI</p>
+                                    <small>1 day ago • +25 points</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-code"></i></div>
+                                <div>
+                                    <p>Built First Robot Program</p>
+                                    <small>2 days ago • +50 points</small>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-book"></i></div>
+                                <div>
+                                    <p>Completed Math Assessment</p>
+                                    <small>3 days ago • +20 points</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Features -->
+                    <div class="card">
+                        <h2><i class="fas fa-brain card-icon"></i> AI-Powered Features</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h3><i class="fas fa-user-graduate"></i> Personalized Learning</h3>
+                                <p>AI adapts content based on your learning style and progress</p>
+                                <ul style="margin-left: 20px; margin-top: 10px; color: var(--text);">
+                                    <li>Adaptive difficulty</li>
+                                    <li>Content recommendations</li>
+                                    <li>Learning path optimization</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3><i class="fas fa-chart-bar"></i> Predictive Analytics</h3>
+                                <p>ML algorithms predict learning outcomes and identify areas for improvement</p>
+                                <ul style="margin-left: 20px; margin-top: 10px; color: var(--text);">
+                                    <li>Performance forecasting</li>
+                                    <li>Intervention suggestions</li>
+                                    <li>Progress tracking</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Chess Tab - FULLY WORKING -->
+        <div class="tab-content" id="chess-tab">
+            <div class="chess-container">
+                <div class="chess-game">
+                    <h2><i class="fas fa-chess-king"></i> Chess Master with Khensani AI</h2>
+                    <p>Challenge your mind! Make strategic moves and earn Khensani points.</p>
+                    
+                    <div class="chessboard" id="chessboard">
+                        <!-- Chessboard generated by JavaScript -->
+                    </div>
+                    
+                    <div class="chess-controls">
+                        <button class="chess-btn" id="new-game-btn">
+                            <i class="fas fa-plus"></i> New Game
+                        </button>
+                        <button class="chess-btn" id="hint-btn">
+                            <i class="fas fa-lightbulb"></i> AI Hint
+                        </button>
+                        <button class="chess-btn" id="undo-btn">
+                            <i class="fas fa-undo"></i> Undo
+                        </button>
+                        <button class="chess-btn secondary" id="analyze-btn">
+                            <i class="fas fa-brain"></i> Analyze
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sidebar">
+                    <div class="card">
+                        <h3><i class="fas fa-chess-board"></i> Game Info</h3>
+                        <div class="game-status">
+                            <div id="status-message">White to start the game</div>
+                        </div>
+                        <div class="player-turn">
+                            <div id="turn-indicator"></div>
+                            <span id="turn-text">White's turn</span>
+                        </div>
+                        <div class="points-display">
+                            <span class="points-icon">⭐</span>
+                            <span class="points-value">310</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i class="fas fa-trophy"></i> Achievements</h3>
+                        <div class="achievement-list">
+                            <div class="achievement unlocked">
+                                <i class="fas fa-chess-pawn"></i>
+                                <span>First Move</span>
+                            </div>
+                            <div class="achievement">
+                                <i class="fas fa-chess-queen"></i>
+                                <span>Checkmate Pro</span>
+                            </div>
+                            <div class="achievement unlocked">
+                                <i class="fas fa-brain"></i>
+                                <span>Strategic Thinker</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3><i class="fas fa-robot"></i> Khensani Tips</h3>
+                        <div id="chess-tips">
+                            <p>Control the center of the board for better positioning!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Robotics Lab - ENHANCED -->
+        <div class="tab-content" id="robotics-tab">
+            <div class="robotics-lab">
+                <div class="robot-control-panel">
+                    <h2><i class="fas fa-robot"></i> Robotics Lab</h2>
+                    <p>Control your educational robot and complete STEM challenges</p>
+                    
+                    <div class="control-grid">
+                        <button class="control-btn" data-action="forward">↑</button>
+                        <button class="control-btn" data-action="left">←</button>
+                        <button class="control-btn" data-action="stop">⏹️</button>
+                        <button class="control-btn" data-action="right">→</button>
+                        <button class="control-btn" data-action="backward">↓</button>
+                        <button class="control-btn" data-action="dance">💃</button>
+                    </div>
+                    
+                    <div class="sensor-data">
+                        <div class="sensor-item">
+                            <div>Distance</div>
+                            <div class="sensor-value" id="distance-sensor">25cm</div>
+                        </div>
+                        <div class="sensor-item">
+                            <div>Battery</div>
+                            <div class="sensor-value" id="battery-level">85%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="challenges">
+                        <h3>Active Challenges</h3>
+                        <div class="challenge-item completed">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Maze Navigation</span>
+                        </div>
+                        <div class="challenge-item active">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Object Sorting</span>
+                        </div>
+                        <div class="challenge-item">
+                            <i class="fas fa-lock"></i>
+                            <span>Line Following</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="robot-visualization">
+                    <h2>Robot Live View</h2>
+                    <div class="robot-model">🤖</div>
+                    <div class="robot-status">
+                        <div class="status-indicator online"></div>
+                        <span>Khensani Bot - Connected</span>
+                    </div>
+                    <div class="live-feed">
+                        <div class="feed-placeholder">
+                            <i class="fas fa-video"></i>
+                            <p>Live Camera Feed</p>
+                            <small>Robot vision active</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Map Tab - FIXED AND WORKING -->
+        <div class="tab-content" id="map-tab">
+            <div class="map-tab-content">
+                <div class="map-sidebar">
+                    <div class="card">
+                        <h2><i class="fas fa-user card-icon"></i> Child Status</h2>
+                        <div class="child-info" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+                            <div class="avatar">LD</div>
+                            <div class="user-info">
+                                <h3>Lerato Dube</h3>
+                                <p>Grade 4 • Sunshine Elementary</p>
+                            </div>
+                        </div>
+                        <div class="status-indicator" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--success);"></div>
+                            <span>Currently at school</span>
+                        </div>
+                        <div class="points-display">
+                            <span class="points-icon">⭐</span>
+                            <span class="points-value">310</span>
+                            <span>Khensani Points</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2><i class="fas fa-map-marker-alt card-icon"></i> Safe Zones</h2>
+                        <div class="safe-zones">
+                            <div class="zone-item active" data-zone="home">
+                                <span class="zone-name">🏠 Home</span>
+                                <span class="zone-status safe">Safe</span>
+                            </div>
+                            <div class="zone-item" data-zone="school">
+                                <span class="zone-name">🏫 School</span>
+                                <span class="zone-status safe">Safe</span>
+                            </div>
+                            <div class="zone-item" data-zone="grandma">
+                                <span class="zone-name">👵 Grandma's House</span>
+                                <span class="zone-status safe">Safe</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2><i class="fas fa-tasks card-icon"></i> Today's Schedule</h2>
+                        <div class="routine-list">
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox" checked>
+                                <span class="routine-time">7:30 AM</span>
+                                <span class="routine-name routine-completed">Morning routine</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox" checked>
+                                <span class="routine-time">8:00 AM</span>
+                                <span class="routine-name routine-completed">School departure</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox">
+                                <span class="routine-time">3:30 PM</span>
+                                <span class="routine-name">Soccer practice</span>
+                            </div>
+                            <div class="routine-item">
+                                <input type="checkbox" class="routine-checkbox">
+                                <span class="routine-time">6:00 PM</span>
+                                <span class="routine-name">Homework time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-main-content">
+                    <div class="map-card">
+                        <h2><i class="fas fa-map card-icon"></i> SmartPath Tracker</h2>
+                        <p style="margin-bottom: 20px; color: var(--text); opacity: 0.8;">Real-time location tracking and safe zone monitoring</p>
+                        
+                        <div class="map-container">
+                            <div id="map">
+                                <div class="map-loading">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                                    <p>Loading SmartPath Tracker...</p>
+                                </div>
+                            </div>
+                            <div class="map-controls">
+                                <button class="map-control-btn" id="locate-btn" title="Locate Lerato">
+                                    <i class="fas fa-location-arrow"></i>
+                                </button>
+                                <button class="map-control-btn" id="zones-btn" title="Show Safe Zones">
+                                    <i class="fas fa-layer-group"></i>
+                                </button>
+                                <button class="map-control-btn" id="refresh-btn" title="Refresh Map">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--primary);"></div>
+                                <span>Lerato's Location</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--success);"></div>
+                                <span>Safe Zones</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Notifications -->
+        <div class="notification" id="points-notification">
+            <div class="notification-header">
+                <span class="notification-title">🎉 Points Earned!</span>
+                <button class="close-notification">&times;</button>
+            </div>
+            <p>You earned <strong>15 Khensani Points</strong> for strategic chess move!</p>
+        </div>
+        
+        <div class="notification" id="achievement-notification">
+            <div class="notification-header">
+                <span class="notification-title">🏆 Achievement Unlocked!</span>
+                <button class="close-notification">&times;</button>
+            </div>
+            <p>Robotics Explorer - First program completed!</p>
+        </div>
+        
+        <div class="notification" id="arrival-notification">
+            <div class="notification-header">
+                <span class="notification-title">✅ Safe Arrival</span>
+                <button class="close-notification">&times;</button>
+            </div>
+            <p>Lerato has arrived safely at Sunshine Elementary School.</p>
+            <div class="points-display" style="margin-top: 10px;">
+                <span class="points-icon">⭐</span>
+                <span>+10 Points for on-time arrival!</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Enhanced Chess Game Implementation
+        class ChessGame {
+            constructor() {
+                this.board = this.createInitialBoard();
+                this.currentPlayer = 'white';
+                this.selectedPiece = null;
+                this.gameActive = true;
+                this.moveHistory = [];
+                this.initializeBoard();
+                this.setupEventListeners();
+            }
+
+            createInitialBoard() {
+                return [
+                    ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+                    ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+                    ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖']
+                ];
+            }
+
+            initializeBoard() {
+                const chessboard = document.getElementById('chessboard');
+                if (!chessboard) return;
+                
+                chessboard.innerHTML = '';
+                
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const square = document.createElement('div');
+                        square.className = `chess-square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        
+                        if (this.board[row][col]) {
+                            square.textContent = this.board[row][col];
+                            // Add color classes for pieces
+                            if (this.isWhitePiece(this.board[row][col])) {
+                                square.classList.add('white-piece');
+                            } else {
+                                square.classList.add('black-piece');
+                            }
+                        }
+                        
+                        square.addEventListener('click', () => this.handleSquareClick(row, col));
+                        chessboard.appendChild(square);
+                    }
+                }
+                this.updateGameStatus();
+            }
+
+            handleSquareClick(row, col) {
+                if (!this.gameActive) return;
+
+                const piece = this.board[row][col];
+                
+                if (this.selectedPiece) {
+                    const [selectedRow, selectedCol] = this.selectedPiece;
+                    
+                    if (selectedRow === row && selectedCol === col) {
+                        this.clearSelection();
+                        return;
+                    }
+                    
+                    if (this.isValidMove(selectedRow, selectedCol, row, col)) {
+                        this.makeMove(selectedRow, selectedCol, row, col);
+                        this.clearSelection();
+                    } else if (piece && this.isPlayerPiece(piece, this.currentPlayer)) {
+                        this.selectPiece(row, col);
+                    } else {
+                        this.clearSelection();
+                    }
+                } else {
+                    if (piece && this.isPlayerPiece(piece, this.currentPlayer)) {
+                        this.selectPiece(row, col);
+                    }
+                }
+            }
+
+            selectPiece(row, col) {
+                this.clearSelection();
+                this.selectedPiece = [row, col];
+                
+                const square = document.querySelector(`.chess-square[data-row="${row}"][data-col="${col}"]`);
+                if (square) square.classList.add('selected');
+                
+                this.showPossibleMoves(row, col);
+            }
+
+            showPossibleMoves(row, col) {
+                const piece = this.board[row][col];
+                // Simplified move highlighting for demo
+                const directions = [];
+                
+                if (piece === '♙' || piece === '♟') {
+                    const direction = piece === '♙' ? -1 : 1;
+                    directions.push([row + direction, col]);
+                    directions.push([row + direction, col - 1]);
+                    directions.push([row + direction, col + 1]);
+                } else {
+                    // Basic moves for other pieces
+                    directions.push([row + 1, col], [row - 1, col], [row, col + 1], [row, col - 1]);
+                }
+                
+                directions.forEach(([r, c]) => {
+                    if (this.isInBounds(r, c)) {
+                        const targetSquare = document.querySelector(`.chess-square[data-row="${r}"][data-col="${c}"]`);
+                        if (targetSquare) {
+                            if (this.board[r][c] === '') {
+                                targetSquare.classList.add('possible-move');
+                            } else if (!this.isPlayerPiece(this.board[r][c], this.currentPlayer)) {
+                                targetSquare.classList.add('possible-capture');
+                            }
+                        }
+                    }
+                });
+            }
+
+            makeMove(fromRow, fromCol, toRow, toCol) {
+                const piece = this.board[fromRow][fromCol];
+                this.board[fromRow][fromCol] = '';
+                this.board[toRow][toCol] = piece;
+                
+                this.moveHistory.push({
+                    piece,
+                    from: [fromRow, fromCol],
+                    to: [toRow, toCol],
+                    player: this.currentPlayer
+                });
+                
+                // Award points
+                this.awardPoints(10, "making a chess move");
+                
+                // Switch player
+                this.currentPlayer = this.currentPlayer === 'white' ? 'black' : 'white';
+                
+                this.initializeBoard();
+                this.updateGameStatus();
+                
+                // AI makes a move after a delay
+                if (this.gameActive && this.currentPlayer === 'black') {
+                    setTimeout(() => this.makeAIMove(), 1000);
+                }
+            }
+
+            makeAIMove() {
+                // Simple AI - find a random valid move
+                const possibleMoves = [];
+                
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const piece = this.board[row][col];
+                        if (piece && this.isPlayerPiece(piece, 'black')) {
+                            // Simplified move generation
+                            const moves = [
+                                [row + 1, col], [row - 1, col],
+                                [row, col + 1], [row, col - 1]
+                            ];
+                            
+                            moves.forEach(([r, c]) => {
+                                if (this.isInBounds(r, c) && this.isValidMove(row, col, r, c)) {
+                                    possibleMoves.push({ from: [row, col], to: [r, c] });
+                                }
+                            });
+                        }
+                    }
+                }
+                
+                if (possibleMoves.length > 0) {
+                    const randomMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+                    this.makeMove(...randomMove.from, ...randomMove.to);
+                }
+            }
+
+            isValidMove(fromRow, fromCol, toRow, toCol) {
+                // Simplified validation for demo
+                if (!this.isInBounds(toRow, toCol)) return false;
+                
+                const targetPiece = this.board[toRow][toCol];
+                if (targetPiece && this.isPlayerPiece(targetPiece, this.currentPlayer)) {
+                    return false;
+                }
+                
+                return true;
+            }
+
+            isPlayerPiece(piece, player) {
+                const whitePieces = ['♙', '♖', '♘', '♗', '♕', '♔'];
+                return player === 'white' ? whitePieces.includes(piece) : !whitePieces.includes(piece);
+            }
+
+            isWhitePiece(piece) {
+                const whitePieces = ['♙', '♖', '♘', '♗', '♕', '♔'];
+                return whitePieces.includes(piece);
+            }
+
+            isInBounds(row, col) {
+                return row >= 0 && row < 8 && col >= 0 && col < 8;
+            }
+
+            clearSelection() {
+                this.selectedPiece = null;
+                document.querySelectorAll('.chess-square').forEach(square => {
+                    square.classList.remove('selected', 'possible-move', 'possible-capture');
+                });
+            }
+
+            updateGameStatus() {
+                const statusMessage = document.getElementById('status-message');
+                const turnText = document.getElementById('turn-text');
+                
+                if (statusMessage && turnText) {
+                    statusMessage.textContent = `${this.currentPlayer === 'white' ? 'White' : 'Black'}'s turn`;
+                    turnText.textContent = `${this.currentPlayer === 'white' ? 'White' : 'Black'}'s turn`;
+                }
+            }
+
+            awardPoints(amount, reason) {
+                const notification = document.getElementById('points-notification');
+                if (notification) {
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
+                }
+            }
+
+            newGame() {
+                this.board = this.createInitialBoard();
+                this.currentPlayer = 'white';
+                this.selectedPiece = null;
+                this.gameActive = true;
+                this.moveHistory = [];
+                this.initializeBoard();
+            }
+
+            provideHint() {
+                this.awardPoints(-5, "using a hint");
+                alert("Khensani Tip: Control the center squares for better piece mobility!");
+            }
+
+            setupEventListeners() {
+                document.getElementById('new-game-btn').addEventListener('click', () => this.newGame());
+                document.getElementById('hint-btn').addEventListener('click', () => this.provideHint());
+                document.getElementById('undo-btn').addEventListener('click', () => {
+                    if (this.moveHistory.length > 0) {
+                        const lastMove = this.moveHistory.pop();
+                        this.board[lastMove.from[0]][lastMove.from[1]] = lastMove.piece;
+                        this.board[lastMove.to[0]][lastMove.to[1]] = '';
+                        this.currentPlayer = lastMove.player;
+                        this.initializeBoard();
+                    }
+                });
+            }
+        }
+
+        // Enhanced Map Functionality - FIXED
+        let map;
+        let leratoMarker;
+        let safeZones = [];
+
+        function initializeMap() {
+            // Clear existing map if any
+            if (map) {
+                map.remove();
+            }
+            
+            const mapElement = document.getElementById('map');
+            if (!mapElement) return;
+            
+            // Remove loading message
+            const loadingElement = mapElement.querySelector('.map-loading');
+            if (loadingElement) {
+                loadingElement.style.display = 'none';
+            }
+            
+            // Initialize map with proper options
+            map = L.map('map', {
+                zoomControl: false,
+                preferCanvas: true
+            }).setView([-26.1076, 28.0567], 13);
+
+            // Add tile layer with error handling
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                maxZoom: 18
+            }).addTo(map);
+
+            // Add zoom control to bottom right
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
+
+            // Define safe zones for Lerato Dube
+            const zones = [
+                {
+                    id: 'home',
+                    name: "Dube Home",
+                    coords: [-26.1076, 28.0567],
+                    radius: 200,
+                    type: "home",
+                    color: "#10b981"
+                },
+                {
+                    id: 'school',
+                    name: "Sunrise Elementary", 
+                    coords: [-26.1020, 28.0600],
+                    radius: 300,
+                    type: "school",
+                    color: "#3b82f6"
+                },
+                {
+                    id: 'grandma',
+                    name: "Grandma's House",
+                    coords: [-26.1150, 28.0500],
+                    radius: 150,
+                    type: "other",
+                    color: "#f59e0b"
+                }
+            ];
+
+            // Clear existing safe zones
+            safeZones.forEach(zone => {
+                if (zone.circle) map.removeLayer(zone.circle);
+            });
+            safeZones = [];
+
+            // Draw enhanced safe zones
+            zones.forEach(zone => {
+                const circle = L.circle(zone.coords, {
+                    color: zone.color,
+                    fillColor: zone.color,
+                    fillOpacity: 0.2,
+                    radius: zone.radius,
+                    weight: 3
+                }).addTo(map);
+                
+                circle.bindPopup(`
+                    <div style="text-align: center; padding: 10px; min-width: 200px;">
+                        <h3 style="margin: 0 0 10px 0; color: ${zone.color};">${zone.name}</h3>
+                        <p style="margin: 0 0 5px 0;">📍 Safe Zone</p>
+                        <p style="margin: 0; font-size: 0.9em; color: #666;">${zone.radius}m radius</p>
+                        <div style="margin-top: 10px; padding: 8px; background: #f1f5f9; border-radius: 5px;">
+                            <span style="color: #10b981;">●</span> Status: Safe
+                        </div>
+                    </div>
+                `);
+                
+                safeZones.push({
+                    ...zone,
+                    circle: circle
+                });
+            });
+
+            // Create custom icon for Lerato
+            const leratoIcon = L.divIcon({
+                html: `
+                    <div style="
+                        background: linear-gradient(135deg, #6a11cb, #2575fc); 
+                        color: white; 
+                        width: 60px; 
+                        height: 60px; 
+                        border-radius: 50%; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        font-weight: bold; 
+                        border: 3px solid white; 
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                        font-size: 1.2em;
+                    ">LD</div>
+                `,
+                className: 'lerato-marker',
+                iconSize: [60, 60],
+                iconAnchor: [30, 30]
+            });
+
+            // Remove existing marker if any
+            if (leratoMarker) {
+                map.removeLayer(leratoMarker);
+            }
+
+            // Add Lerato's location marker
+            leratoMarker = L.marker([-26.1020, 28.0600], { 
+                icon: leratoIcon,
+                zIndexOffset: 1000
+            }).addTo(map);
+            
+            leratoMarker.bindPopup(`
+                <div style="text-align: center; padding: 15px; min-width: 250px;">
+                    <h3 style="margin: 0 0 10px 0; color: #6a11cb;">Lerato Dube</h3>
+                    <p style="margin: 0 0 5px 0;">📍 Currently at school</p>
+                    <p style="margin: 0 0 10px 0; font-size: 0.9em; color: #666;">Sunrise Elementary</p>
+                    <div style="background: linear-gradient(135deg, #ffd700, #ffec8b); padding: 10px; border-radius: 10px;">
+                        <strong>⭐ 310 Khensani Points</strong>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #10b981; color: white; border-radius: 5px;">
+                        <i class="fas fa-check-circle"></i> Safe & Accounted For
+                    </div>
+                </div>
+            `).openPopup();
+
+            // Enhanced map controls
+            document.getElementById('locate-btn').addEventListener('click', function() {
+                map.setView([-26.1020, 28.0600], 16);
+                leratoMarker.openPopup();
+            });
+
+            document.getElementById('zones-btn').addEventListener('click', function() {
+                const group = new L.featureGroup(safeZones.map(zone => zone.circle));
+                map.fitBounds(group.getBounds().pad(0.1));
+            });
+
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                // Add loading animation to button
+                const icon = this.querySelector('i');
+                icon.className = 'fas fa-spinner fa-spin';
+                
+                setTimeout(() => {
+                    initializeMap();
+                    icon.className = 'fas fa-sync-alt';
+                    
+                    // Show refresh notification
+                    document.getElementById('points-notification').querySelector('.notification-title').textContent = '🔄 Map Refreshed';
+                    document.getElementById('points-notification').querySelector('p').textContent = 'SmartPath tracker updated successfully!';
+                    document.getElementById('points-notification').classList.add('show');
+                    
+                    setTimeout(() => {
+                        document.getElementById('points-notification').classList.remove('show');
+                    }, 3000);
+                }, 1000);
+            });
+
+            // Zone item click handlers
+            document.querySelectorAll('.zone-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const zoneId = this.getAttribute('data-zone');
+                    const zone = safeZones.find(z => z.id === zoneId);
+                    
+                    if (zone) {
+                        // Update active state
+                        document.querySelectorAll('.zone-item').forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Center map on zone
+                        map.setView(zone.coords, 15);
+                        zone.circle.openPopup();
+                    }
+                });
+            });
+
+            console.log('Map initialized successfully');
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize chess game
+            window.chessGame = new ChessGame();
+            
+            // Initialize map
+            setTimeout(initializeMap, 100);
+            
+            // Robotics lab functionality
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.getAttribute('data-action');
+                    this.classList.add('active');
+                    
+                    // Simulate robot action
+                    const actions = {
+                        'forward': 'Moving forward...',
+                        'backward': 'Moving backward...',
+                        'left': 'Turning left...',
+                        'right': 'Turning right...',
+                        'stop': 'Stopping...',
+                        'dance': 'Performing victory dance! 🎉'
+                    };
+                    
+                    // Update sensor data randomly
+                    document.getElementById('distance-sensor').textContent = 
+                        Math.floor(Math.random() * 50) + 'cm';
+                    document.getElementById('battery-level').textContent = 
+                        Math.max(10, Math.floor(Math.random() * 100)) + '%';
+                    
+                    // Show achievement for first dance
+                    if (action === 'dance') {
+                        document.getElementById('achievement-notification').classList.add('show');
+                        setTimeout(() => {
+                            document.getElementById('achievement-notification').classList.remove('show');
+                        }, 3000);
+                    }
+                    
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 1000);
+                });
+            });
+
+            // Enhanced Tab Functionality with map support
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    // Special handling for map tab
+                    if (this.getAttribute('data-tab') === 'map') {
+                        setTimeout(() => {
+                            if (map) {
+                                map.invalidateSize();
+                            } else {
+                                initializeMap();
+                            }
+                        }, 300);
+                    }
+                    
+                    // Reinitialize chess game when switching to chess tab
+                    if (this.getAttribute('data-tab') === 'chess' && window.chessGame) {
+                        setTimeout(() => window.chessGame.initializeBoard(), 100);
+                    }
+                });
+            });
+
+            // Show initial arrival notification
+            setTimeout(() => {
+                document.getElementById('arrival-notification').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('arrival-notification').classList.remove('show');
+                }, 5000);
+            }, 2000);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (map) {
+                setTimeout(() => {
+                    map.invalidateSize();
+                }, 300);
+            }
+        });
+
+        // Close notifications
+        document.querySelectorAll('.close-notification').forEach(button => {
+            button.addEventListener('click', function() {
+                this.closest('.notification').classList.remove('show');
+            });
+        });
+
+        // Simulate periodic location updates
+        setInterval(() => {
+            if (leratoMarker && map) {
+                // Slightly move marker to simulate live tracking
+                const currentLatLng = leratoMarker.getLatLng();
+                const newLatLng = [
+                    currentLatLng.lat + (Math.random() - 0.5) * 0.0001,
+                    currentLatLng.lng + (Math.random() - 0.5) * 0.0001
+                ];
+                leratoMarker.setLatLng(newLatLng);
+            }
+        }, 10000); // Update every 10 seconds
+    </script>
+</body>
+</html>

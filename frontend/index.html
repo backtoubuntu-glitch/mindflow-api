@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow - AI-Powered Learning Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header-container"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Welcome to <span class="gradient-text">MindFlow</span></h1>
+                    <p class="hero-subtitle">Africa's first AI-powered adaptive learning platform with integrated safety features</p>
+                    <p class="hero-description">Personalized learning journeys powered by Khensani AI, making quality education accessible to every African child.</p>
+                    
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Get Started
+                        </a>
+                        <a href="#features" class="btn btn-secondary">
+                            <i class="fas fa-play-circle"></i>
+                            Watch Demo
+                        </a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <div class="stat-number">10,000+</div>
+                            <div class="stat-label">Active Learners</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">94%</div>
+                            <div class="stat-label">Improved Performance</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">AI Support</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="hero-card glass-morphism">
+                        <div class="ai-assistant-preview">
+                            <div class="ai-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="ai-message">
+                                <p>Hello! I'm Khensani, your AI learning assistant. Ready to start your journey?</p>
+                            </div>
+                        </div>
+                        <div class="platform-preview">
+                            <div class="preview-item">
+                                <i class="fas fa-chess-knight"></i>
+                                <span>Strategic Thinking</span>
+                            </div>
+                            <div class="preview-item">
+                                <i class="fas fa-robot"></i>
+                                <span>Robotics Lab</span>
+                            </div>
+                            <div class="preview-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Progress Tracking</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose MindFlow?</h2>
+            <div class="features-grid">
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Learning</h3>
+                    <p>Khensani AI adapts to your learning style and pace, creating personalized educational journeys.</p>
+                </div>
+                
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Integrated Safety</h3>
+                    <p>Real-time location tracking and safe zone monitoring for complete peace of mind.</p>
+                </div>
+                
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-chess-knight"></i>
+                    </div>
+                    <h3>Strategic Games</h3>
+                    <p>Develop critical thinking through interactive chess and puzzle challenges.</p>
+                </div>
+                
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Robotics Simulator</h3>
+                    <p>Learn programming and engineering concepts through virtual robotics.</p>
+                </div>
+                
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Progress Analytics</h3>
+                    <p>Detailed insights into learning progress with predictive performance analysis.</p>
+                </div>
+                
+                <div class="feature-card glass-morphism">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile First</h3>
+                    <p>Optimized for low-bandwidth environments and accessible on any device.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content glass-morphism">
+                <h2>Ready to Start Your Learning Journey?</h2>
+                <p>Join thousands of African learners transforming their education with AI</p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn btn-primary btn-large">
+                        <i class="fas fa-user-plus"></i>
+                        Create Free Account
+                    </a>
+                    <a href="login.html" class="btn btn-secondary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Load header and footer components
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComponent('header-container', 'components/header.html');
+            loadComponent('footer-container', 'components/footer.html');
+        });
+    </script>
+    <script src="assets/js/quick-upgrades.js"></script>\n</body>
+</html>

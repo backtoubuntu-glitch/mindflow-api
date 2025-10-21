@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MindFlow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body class="dashboard-body">
+    <!-- Header Component -->
+    <div id="header-container"></div>
+
+    <main class="dashboard-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-card glass-morphism">
+                    <div class="welcome-content">
+                        <div class="user-greeting">
+                            <h1>Welcome back, <span class="user-name">Lerato</span>! 👋</h1>
+                            <p class="welcome-message">Ready to continue your learning adventure with Khensani AI?</p>
+                        </div>
+                        <div class="ai-assistant-quick">
+                            <div class="ai-avatar-small">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="ai-quick-message">
+                                <p>"Let's work on your mathematics skills today!"</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quick-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Overall Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Streak Days</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">350</div>
+                            <div class="stat-label">Points</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Left Column -->
+                <div class="dashboard-column">
+                    <!-- Today's Schedule -->
+                    <section class="dashboard-card glass-morphism">
+                        <div class="card-header">
+                            <h3><i class="fas fa-calendar-day"></i> Today's Schedule</h3>
+                            <button class="btn-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </button>
+                        </div>
+                        <div class="schedule-list">
+                            <div class="schedule-item">
+                                <div class="schedule-time">09:00 AM</div>
+                                <div class="schedule-content">
+                                    <h4>Mathematics - Fractions</h4>
+                                    <p>Interactive lesson with Khensani AI</p>
+                                </div>
+                                <div class="schedule-status active">Now</div>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">11:00 AM</div>
+                                <div class="schedule-content">
+                                    <h4>Chess Strategy</h4>
+                                    <p>Advanced tactics practice</p>
+                                </div>
+                                <div class="schedule-status upcoming">Next</div>
+                            </div>
+                            <div class="schedule-item">
+                                <div class="schedule-time">02:00 PM</div>
+                                <div class="schedule-content">
+                                    <h4>Robotics Lab</h4>
+                                    <p>Programming challenges</p>
+                                </div>
+                                <div class="schedule-status">Later</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Progress Tracking -->
+                    <section class="dashboard-card glass-morphism">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Learning Progress</h3>
+                        </div>
+                        <div class="progress-chart">
+                            <div class="progress-subject">
+                                <div class="subject-name">Mathematics</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 78%"></div>
+                                </div>
+                                <div class="progress-percent">78%</div>
+                            </div>
+                            <div class="progress-subject">
+                                <div class="subject-name">Science</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="progress-percent">65%</div>
+                            </div>
+                            <div class="progress-subject">
+                                <div class="subject-name">English</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 82%"></div>
+                                </div>
+                                <div class="progress-percent">82%</div>
+                            </div>
+                            <div class="progress-subject">
+                                <div class="subject-name">Chess</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 45%"></div>
+                                </div>
+                                <div class="progress-percent">45%</div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Center Column -->
+                <div class="dashboard-column">
+                    <!-- Quick Actions -->
+                    <section class="dashboard-card glass-morphism">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                        </div>
+                        <div class="quick-actions-grid">
+                            <a href="curriculum.html" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <div class="action-text">Continue Learning</div>
+                            </a>
+                            <a href="#" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-chess-knight"></i>
+                                </div>
+                                <div class="action-text">Play Chess</div>
+                            </a>
+                            <a href="#" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="action-text">Robotics Lab</div>
+                            </a>
+                            <a href="#" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div class="action-text">Practice Exercises</div>
+                            </a>
+                            <a href="profile.html" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="action-text">My Profile</div>
+                            </a>
+                            <a href="settings.html" class="action-card">
+                                <div class="action-icon">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <div class="action-text">Settings</div>
+                            </a>
+                        </div>
+                    </section>
+
+                    <!-- Khensani AI Assistant -->
+                    <section class="dashboard-card glass-morphism ai-assistant-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-robot"></i> Khensani AI Assistant</h3>
+                        </div>
+                        <div class="ai-chat-container">
+                            <div class="ai-messages">
+                                <div class="ai-message">
+                                    <div class="message-avatar">
+                                        <i class="fas fa-robot"></i>
+                                    </div>
+                                    <div class="message-content">
+                                        <p>Hi Lerato! I noticed you're doing great in mathematics. Would you like to try some advanced fraction problems today?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ai-quick-responses">
+                                <button class="response-btn">Yes, let's do it!</button>
+                                <button class="response-btn">Maybe later</button>
+                                <button class="response-btn">Suggest something else</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column -->
+                <div class="dashboard-column">
+                    <!-- Achievements -->
+                    <section class="dashboard-card glass-morphism">
+                        <div class="card-header">
+                            <h3><i class="fas fa-trophy"></i> Recent Achievements</h3>
+                        </div>
+                        <div class="achievements-list">
+                            <div class="achievement-item">
+                                <div class="achievement-badge">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>Math Whiz</h4>
+                                    <p>Completed 50 math problems</p>
+                                    <span class="achievement-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="achievement-item">
+                                <div class="achievement-badge">
+                                    <i class="fas fa-chess-queen"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>Chess Champion</h4>
+                                    <p>Won 5 consecutive games</p>
+                                    <span class="achievement-time">Yesterday</span>
+                                </div>
+                            </div>
+                            <div class="achievement-item">
+                                <div class="achievement-badge">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="achievement-info">
+                                    <h4>Code Master</h4>
+                                    <p>Solved robotics challenge</p>
+                                    <span class="achievement-time">3 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Safety Status -->
+                    <section class="dashboard-card glass-morphism safety-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-shield-alt"></i> Safety Status</h3>
+                            <div class="safety-status safe">
+                                <i class="fas fa-check-circle"></i>
+                                All Safe
+                            </div>
+                        </div>
+                        <div class="safety-info">
+                            <div class="safety-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div class="safety-details">
+                                    <div class="safety-label">Current Location</div>
+                                    <div class="safety-value">Home - Safe Zone</div>
+                                </div>
+                            </div>
+                            <div class="safety-item">
+                                <i class="fas fa-clock"></i>
+                                <div class="safety-details">
+                                    <div class="safety-label">Last Check-in</div>
+                                    <div class="safety-value">15 minutes ago</div>
+                                </div>
+                            </div>
+                            <div class="safety-item">
+                                <i class="fas fa-bell"></i>
+                                <div class="safety-details">
+                                    <div class="safety-label">Notifications</div>
+                                    <div class="safety-value">Parents notified</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="footer-container"></div>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadComponent('header-container', 'components/header.html');
+            loadComponent('footer-container', 'components/footer.html');
+            
+            // Dashboard specific functionality
+            initializeDashboard();
+        });
+
+        function initializeDashboard() {
+            // Add interactive functionality for the dashboard
+            console.log('Dashboard initialized');
+        }
+    </script>
+</body>
+</html>
