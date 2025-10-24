@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khensani AI - MindFlow</title>
+    <link rel="stylesheet" href="assets/css/global-deep-tech.css">
+    <style>
+        .curriculum-hero {
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            padding: 120px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .subject-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--tech-glow);
+        }
+        
+        .subject-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .upload-section {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 20px;
+            text-align: center;
+            border: 2px dashed var(--cyber-blue);
+        }
+        
+        .khensani-section {
+            background: linear-gradient(135deg, var(--cyber-blue), #B026FF);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 20px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            background: #2A2A2A;
+            border-radius: 10px;
+            height: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), #00FF41);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Consistent Navigation -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
+        </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link active">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="parent-teacher-portal.html" class="nav-link">Parent Portal</a>
+            <a href="corporate-portal.html" class="nav-link">Corporate</a>
+            <a href="safety.html" class="nav-link">Safety</a>
+            <a href="login.html" class="nav-link">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="curriculum-hero">
+        <div class="hero-content">
+            <h1 class="main-heading">KHENSANI AI</h1>
+            <p style="font-size: 1.3em; margin-bottom: 30px; opacity: 0.9;">
+                Your AI Learning Assistant • Voice Enabled • Document Intelligence
+            </p>
+            <button class="tech-btn" onclick="startVoiceAI()">🎤 Talk to Khensani</button>
+        </div>
+    </section>
+
+    <!-- Document Upload -->
+    <section class="upload-section">
+        <h2 class="tech-heading">📁 Upload Learning Materials</h2>
+        <p>Khensani AI can analyze any document and help you understand it</p>
+        <div style="margin: 30px 0;">
+            <button class="tech-btn" onclick="uploadDocument()">📄 Upload PDF/DOC/PPT</button>
+            <button class="tech-btn" style="background: transparent; border: 2px solid var(--cyber-blue);" 
+                    onclick="showSupportedFormats()">📋 Supported Formats</button>
+        </div>
+        <div class="ad-children-spot"></div>
+    </section>
+
+    <!-- Subjects Grid -->
+    <section class="subject-grid">
+        <div class="tech-card subject-card" onclick="openSubject('ai')">
+            <div class="subject-icon">🤖</div>
+            <h3 class="tech-heading">AI & Machine Learning</h3>
+            <p>Learn neural networks, computer vision, and AI ethics with hands-on projects.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%"></div>
+            </div>
+            <small>12 Modules • 45 Lessons</small>
+        </div>
+
+        <div class="tech-card subject-card" onclick="openSubject('robotics')">
+            <div class="subject-icon">🔧</div>
+            <h3 class="tech-heading">Robotics & Engineering</h3>
+            <p>Arduino, sensors, and African innovation projects with practical builds.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 15%"></div>
+            </div>
+            <small>8 Modules • 32 Lessons</small>
+        </div>
+
+        <div class="tech-card subject-card" onclick="openSubject('mathematics')">
+            <div class="subject-icon">📐</div>
+            <h3 class="tech-heading">Mathematics</h3>
+            <p>Algebra, geometry, calculus with AI-guided problem solving and real-world applications.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <small>20 Modules • 85 Lessons</small>
+        </div>
+
+        <div class="tech-card subject-card" onclick="openSubject('science')">
+            <div class="subject-icon">🔬</div>
+            <h3 class="tech-heading">Science</h3>
+            <p>Physics, chemistry, biology with virtual labs and African scientific innovations.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 30%"></div>
+            </div>
+            <small>18 Modules • 70 Lessons</small>
+        </div>
+
+        <div class="tech-card subject-card" onclick="openSubject('programming')">
+            <div class="subject-icon">💻</div>
+            <h3 class="tech-heading">Programming</h3>
+            <p>Python, JavaScript, web development from basics to advanced AI programming.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 35%"></div>
+            </div>
+            <small>15 Modules • 60 Lessons</small>
+        </div>
+
+        <div class="tech-card subject-card" onclick="openSubject('african-studies')">
+            <div class="subject-icon">🌍</div>
+            <h3 class="tech-heading">African Studies</h3>
+            <p>History, culture, languages, and innovation from African perspectives.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%"></div>
+            </div>
+            <small>10 Modules • 40 Lessons</small>
+        </div>
+    </section>
+
+    <!-- Khensani AI Section -->
+    <section class="khensani-section">
+        <h2 class="tech-heading" style="-webkit-text-fill-color: white;">🤖 Khensani AI Assistant</h2>
+        <p style="margin: 20px 0; font-size: 1.1em;">Ask me anything about your subjects, upload documents for analysis, or use voice commands!</p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="tech-btn" onclick="startVoiceAI()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">🎤 Voice Chat</button>
+            <button class="tech-btn" onclick="openChat()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">💬 Text Chat</button>
+            <button class="tech-btn" onclick="showDocumentHelp()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">📚 Document Help</button>
+        </div>
+    </section>
+
+    <!-- Parent Ad Spot -->
+    <div class="ad-parents-spot" style="margin: 40px 20px;"></div>
+
+    <!-- Consistent Footer -->
+    <footer class="tech-footer">
+        <div style="text-align: center; padding: 40px 20px;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="ad-children-spot"></div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/enhanced-tracker.js"></script>
+    <script src="assets/js/ad-system.js"></script>
+    
+    <script>
+        function startVoiceAI() {
+            alert("🎤 Khensani AI Voice System\n\nSay: 'Hello Khensani' or 'Help with mathematics'");
+        }
+        
+        function openSubject(subject) {
+            const subjects = {
+                'ai': "Loading AI Curriculum... 🤖",
+                'robotics': "Opening Robotics Projects... 🔧",
+                'mathematics': "Starting Mathematics... 📐", 
+                'science': "Launching Science Labs... 🔬",
+                'programming': "Opening Code Environment... 💻",
+                'african-studies': "Exploring African Studies... 🌍"
+            };
+            alert(subjects[subject] || "Loading subject content...");
+        }
+        
+        function uploadDocument() {
+            alert("📁 Document Upload\n\nSupported: PDF, DOC, PPT, Images\nKhensani will analyze and help you understand the content!");
+        }
+        
+        function openChat() {
+            alert("💬 Khensani Chat\n\nAsk me about:\n• Mathematics problems\n• Science concepts\n• Document explanations\n• Learning strategies");
+        }
+        
+        function showSupportedFormats() {
+            alert("📋 Supported Formats:\n\n• PDF documents\n• Word documents (DOC/DOCX)\n• Presentations (PPT/PPTX)\n• Images (JPG/PNG)\n• Text files\n• Audio recordings");
+        }
+        
+        function showDocumentHelp() {
+            alert("📚 Document Intelligence:\n\n• PDF text extraction\n• Image OCR and analysis\n• Presentation content parsing\n• Audio transcription\n• Cross-document search");
+        }
+    </script>
+</body>
+</html>
