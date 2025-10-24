@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,11 +9,122 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/components.css">
     <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #8b5cf6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Exo', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-light {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-light:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+            transition: color 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            color: var(--primary);
+        }
+
         .curriculum-hero {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             padding: 3rem 0;
             color: white;
             text-align: center;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .curriculum-container {
@@ -94,6 +205,7 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
         }
 
         .subject-card:hover {
@@ -169,7 +281,7 @@
             padding: 1rem 0;
             border-bottom: 1px solid var(--light);
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .module-item:last-child {
@@ -271,6 +383,57 @@
         .difficulty-intermediate { background: var(--warning); color: white; }
         .difficulty-advanced { background: var(--primary); color: white; }
 
+        /* AI Button Styles */
+        .ai-btn {
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .ai-btn.primary { background: #2563eb; color: white; }
+        .ai-btn.secondary { background: #6b7280; color: white; }
+        .ai-btn.success { background: #10b981; color: white; }
+        .ai-btn.warning { background: #f59e0b; color: white; }
+        .ai-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .ai-btn:active { transform: translateY(0); }
+
+        .module-ai-hover { 
+            background: linear-gradient(90deg, rgba(37, 99, 235, 0.1), transparent) !important;
+            border-left: 4px solid #2563eb !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .subject-ai-active {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2) !important;
+            transition: all 0.4s ease !important;
+        }
+
+        .mindflow-brand {
+            font-family: 'Exo', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .mindtech-brand {
+            font-family: 'Exo', sans-serif;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.9em;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -289,18 +452,46 @@
                 flex-direction: column;
                 text-align: center;
             }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Header Component -->
-    <div id="header-container"></div>
+    <!-- Header -->
+    <header style="background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 1rem 0;">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div>
+                        <div class="mindflow-brand" style="font-size: 1.5rem;">MindFlow</div>
+                        <div class="mindtech-brand">Powered by MindTech</div>
+                    </div>
+                </div>
+                <nav style="display: flex; gap: 2rem; align-items: center;">
+                    <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">Dashboard</a>
+                    <a href="#" style="text-decoration: none; color: var(--primary); font-weight: 600;">Curriculum</a>
+                    <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">Progress</a>
+                    <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">Profile</a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
     <!-- Hero Section -->
     <section class="curriculum-hero">
         <div class="container">
-            <h1>Your Learning Journey</h1>
-            <p>Personalized curriculum powered by Khensani AI</p>
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">Your Learning Journey</h1>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Personalized curriculum powered by AI</p>
             <div class="hero-stats">
                 <div class="stat">
                     <div class="stat-number">78%</div>
@@ -326,8 +517,9 @@
                 <button class="filter-btn" data-filter="mathematics">Mathematics</button>
                 <button class="filter-btn" data-filter="science">Science</button>
                 <button class="filter-btn" data-filter="english">English</button>
-                <button class="filter-btn" data-filter="chess">Chess</button>
+                <button class="filter-btn" data-filter="ai">AI</button>
                 <button class="filter-btn" data-filter="robotics">Robotics</button>
+                <button class="filter-btn" data-filter="chess">Chess</button>
             </div>
             <div class="search-box">
                 <i class="fas fa-search"></i>
@@ -344,7 +536,7 @@
                     <i class="fas fa-robot"></i>
                 </div>
                 <div class="recommendation-content">
-                    <h3>📚 Khensani's Recommendation</h3>
+                    <h3>🧠 AI Learning Assistant</h3>
                     <p>"Based on your progress, I recommend focusing on <strong>Fraction Operations</strong> in Mathematics next. You're doing great with basic fractions - let's level up!"</p>
                 </div>
                 <button class="btn btn-light">
@@ -567,24 +759,24 @@
                     </div>
                 </div>
 
-                <!-- Chess Academy -->
-                <div class="subject-card" data-subject="chess">
+                <!-- AI Card -->
+                <div class="subject-card" data-subject="ai">
                     <div class="subject-header">
                         <div class="subject-icon">
-                            <i class="fas fa-chess-knight"></i>
+                            <i class="fas fa-brain"></i>
                         </div>
                         <div class="subject-info">
-                            <h3>Chess Academy <span class="difficulty-badge difficulty-beginner">Beginner</span></h3>
-                            <p>Strategy, Tactics & Critical Thinking</p>
+                            <h3>AI <span class="difficulty-badge difficulty-intermediate">Explorer</span></h3>
+                            <p>Artificial Intelligence, Machine Learning & Neural Networks</p>
                         </div>
                     </div>
                     <div class="subject-progress">
                         <div class="progress-info">
                             <span>Progress</span>
-                            <span>45%</span>
+                            <span>40%</span>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 45%"></div>
+                            <div class="progress-fill" style="width: 40%"></div>
                         </div>
                     </div>
                     <div class="modules-list">
@@ -593,8 +785,8 @@
                                 <i class="fas fa-check"></i>
                             </div>
                             <div class="module-details">
-                                <h4>Chess Basics</h4>
-                                <p>Piece movements and board setup</p>
+                                <h4>What is AI?</h4>
+                                <p>Understanding artificial intelligence</p>
                             </div>
                             <div class="module-actions">
                                 <button class="btn-icon">
@@ -607,12 +799,12 @@
                                 <i class="fas fa-play"></i>
                             </div>
                             <div class="module-details">
-                                <h4>Opening Strategies</h4>
-                                <p>Starting the game strong</p>
+                                <h4>Machine Learning Basics</h4>
+                                <p>How computers learn from data</p>
                             </div>
                             <div class="module-actions">
                                 <button class="btn btn-primary btn-sm">
-                                    Practice
+                                    Continue
                                 </button>
                             </div>
                         </div>
@@ -621,8 +813,22 @@
                                 <i class="fas fa-lock"></i>
                             </div>
                             <div class="module-details">
-                                <h4>Tactical Patterns</h4>
-                                <p>Forks, pins, and skewers</p>
+                                <h4>Neural Networks</h4>
+                                <p>How AI brains work</p>
+                            </div>
+                            <div class="module-actions">
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    Locked
+                                </button>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <div class="module-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="module-details">
+                                <h4>AI Ethics</h4>
+                                <p>Responsible AI development</p>
                             </div>
                             <div class="module-actions">
                                 <button class="btn btn-secondary btn-sm" disabled>
@@ -633,14 +839,14 @@
                     </div>
                 </div>
 
-                <!-- Robotics Lab -->
+                <!-- Robotics Card -->
                 <div class="subject-card" data-subject="robotics">
                     <div class="subject-header">
                         <div class="subject-icon">
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="subject-info">
-                            <h3>Robotics Lab <span class="difficulty-badge difficulty-intermediate">Explorer</span></h3>
+                            <h3>Robotics <span class="difficulty-badge difficulty-intermediate">Explorer</span></h3>
                             <p>Programming, Engineering & Problem Solving</p>
                         </div>
                     </div>
@@ -698,18 +904,416 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Chess Card -->
+                <div class="subject-card" data-subject="chess">
+                    <div class="subject-header">
+                        <div class="subject-icon">
+                            <i class="fas fa-chess-knight"></i>
+                        </div>
+                        <div class="subject-info">
+                            <h3>Chess <span class="difficulty-badge difficulty-beginner">Beginner</span></h3>
+                            <p>Strategy, Tactics & Critical Thinking</p>
+                        </div>
+                    </div>
+                    <div class="subject-progress">
+                        <div class="progress-info">
+                            <span>Progress</span>
+                            <span>45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="modules-list">
+                        <div class="module-item">
+                            <div class="module-status completed">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="module-details">
+                                <h4>Chess Basics</h4>
+                                <p>Piece movements and board setup</p>
+                            </div>
+                            <div class="module-actions">
+                                <button class="btn-icon">
+                                    <i class="fas fa-redo"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <div class="module-status current">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="module-details">
+                                <h4>Opening Strategies</h4>
+                                <p>Starting the game strong</p>
+                            </div>
+                            <div class="module-actions">
+                                <button class="btn btn-primary btn-sm">
+                                    Practice
+                                </button>
+                            </div>
+                        </div>
+                        <div class="module-item">
+                            <div class="module-status">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="module-details">
+                                <h4>Tactical Patterns</h4>
+                                <p>Forks, pins, and skewers</p>
+                            </div>
+                            <div class="module-actions">
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    Locked
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer Component -->
-    <div id="footer-container"></div>
+    <!-- Footer -->
+    <footer style="background: var(--dark); color: white; padding: 3rem 0; margin-top: 4rem;">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div>
+                    <div class="mindflow-brand" style="font-size: 1.5rem; margin-bottom: 0.5rem;">MindFlow</div>
+                    <div class="mindtech-brand" style="margin-bottom: 1rem;">Powered by MindTech</div>
+                    <p style="opacity: 0.8; line-height: 1.6;">Making quality AI-powered education accessible to every African child with sustainable enterprise partnerships.</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Home</a>
+                        <a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Curriculum</a>
+                        <a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Progress Tracking</a>
+                        <a href="#" style="color: white; text-decoration: none; opacity: 0.8;">Corporate Portal</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Contact</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; opacity: 0.8;">
+                        <div>📧 info@mindflow.ai</div>
+                        <div>🌍 South Africa</div>
+                        <div>🕒 Mon-Fri 8AM-6PM</div>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.1); margin-top: 2rem; padding-top: 2rem; text-align: center; opacity: 0.7;">
+                <div>© 2025 MindFlow. Powered by MindTech. All rights reserved.</div>
+            </div>
+        </div>
+    </footer>
 
-    <script src="assets/js/main.js"></script>
     <script>
+        // MindFlow Ultimate Frontend AI
+        class MindFlowAI {
+            constructor() {
+                this.voiceReady = 'speechSynthesis' in window;
+                this.aiActive = false;
+                this.responses = this.createAIResponses();
+            }
+            
+            createAIResponses() {
+                return {
+                    math: [
+                        "Fractions are like sharing food at a family gathering! Let's use African recipes to understand how fractions work in real life.",
+                        "Mathematics is the language of African innovation! From architecture to technology, fractions help us build amazing things.",
+                        "I see you're ready for fraction operations! Let's practice with examples from African markets and traditional crafts."
+                    ],
+                    science: [
+                        "Science is all around us in Africa! Let's explore forces and motion through traditional games and modern transportation.",
+                        "Get ready for a science safari! We'll discover how forces work in African nature and daily activities.",
+                        "African scientists have made incredible discoveries! Let's continue that tradition with hands-on experiments."
+                    ],
+                    english: [
+                        "African storytelling is world-famous! Let's write stories that celebrate our rich heritage and bright future.",
+                        "Your English skills can share African wisdom with the world! Ready to craft some powerful stories?",
+                        "Language is power! Let's build communication skills that will help you lead and inspire."
+                    ],
+                    ai: [
+                        "Artificial Intelligence is transforming Africa! Let's explore how AI can solve real African challenges.",
+                        "Machine learning helps computers learn from African data patterns. Ready to train your first AI model?",
+                        "AI ethics is crucial for African development. Let's discuss responsible AI that serves our communities."
+                    ],
+                    robotics: [
+                        "Robotics combines African creativity with technology! Let's build solutions for African challenges.",
+                        "Programming robots is like teaching them African dances - precise movements and beautiful patterns!",
+                        "African robotics innovators are changing the world! Let's continue that legacy with hands-on projects."
+                    ],
+                    motivation: [
+                        "Every lesson you complete builds Africa's future! You're not just learning - you're preparing to innovate.",
+                        "African leaders started as students too! Your learning journey is the first step toward greatness.",
+                        "The skills you build today will solve tomorrow's challenges! Keep going, future leader!"
+                    ]
+                };
+            }
+            
+            init() {
+                if (this.aiActive) return;
+                
+                console.log('🚀 MindFlow AI: Activating Frontend Intelligence');
+                this.injectAIControls();
+                this.transformCurriculum();
+                this.aiActive = true;
+                
+                this.showAIBadge();
+            }
+            
+            injectAIControls() {
+                const aiSection = document.querySelector('.ai-recommendation');
+                if (!aiSection) return;
+                
+                const aiPanel = document.createElement('div');
+                aiPanel.className = 'ultimate-ai-panel';
+                aiPanel.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 15px 0;">
+                        <button class="ai-btn primary" onclick="mindFlowAI.askQuestion()">
+                            <span>🤖 Ask AI</span>
+                        </button>
+                        <button class="ai-btn secondary" onclick="mindFlowAI.readContent()">
+                            <span>📖 Read Aloud</span>
+                        </button>
+                        <button class="ai-btn success" onclick="mindFlowAI.getHelp()">
+                            <span>💡 Get Help</span>
+                        </button>
+                        <button class="ai-btn warning" onclick="mindFlowAI.celebrate()">
+                            <span>🎉 Celebrate</span>
+                        </button>
+                    </div>
+                    <div class="ai-status" style="text-align: center; font-size: 0.8rem; opacity: 0.7; margin-top: 8px;">
+                        🧠 MindFlow AI • ${this.voiceReady ? '🔊 Voice Active' : '💬 Text Mode'} • Powered by MindTech
+                    </div>
+                `;
+                
+                aiSection.appendChild(aiPanel);
+            }
+            
+            askQuestion() {
+                const questions = [
+                    "What should I learn next in mathematics?",
+                    "How can I improve my science understanding?",
+                    "What's the best way to practice English writing?",
+                    "Can you explain fractions in a simpler way?",
+                    "How does AI actually learn?",
+                    "What can robots do to help Africa?"
+                ];
+                
+                const question = questions[Math.floor(Math.random() * questions.length)];
+                const response = this.generateAIResponse(question);
+                
+                this.displayAIResponse(response);
+                this.speak(response);
+            }
+            
+            readContent() {
+                const contentElements = [
+                    document.querySelector('.recommendation-content p'),
+                    document.querySelector('.subject-card:first-child .module-item h4')
+                ].filter(el => el);
+                
+                if (contentElements.length > 0) {
+                    const text = contentElements[0].textContent;
+                    this.speak(text || "Ready to learn something amazing today?");
+                } else {
+                    this.speak("I'm here to help you learn! Explore the curriculum and let me know what you need.");
+                }
+            }
+            
+            getHelp() {
+                const helpMessages = [
+                    "I can help break down difficult concepts into simple steps! What specific topic are you finding challenging?",
+                    "Learning can be tough sometimes, but you're doing great! Let's tackle this together step by step.",
+                    "Remember: every expert was once a beginner. What part would you like me to explain differently?",
+                    "African proverb: 'Smooth seas do not make skillful sailors.' Challenges make us stronger! What do you need help with?"
+                ];
+                
+                const help = helpMessages[Math.floor(Math.random() * helpMessages.length)];
+                this.displayAIResponse(help);
+                this.speak(help);
+            }
+            
+            celebrate() {
+                const celebrations = [
+                    "Amazing progress! You're building skills that will shape Africa's future! 🎉",
+                    "Wow! Your dedication to learning is inspiring! Keep up the fantastic work! 🌟",
+                    "You're doing absolutely brilliant! Every lesson brings you closer to your dreams! 💫",
+                    "Outstanding! African innovation needs minds like yours! Celebrate every step! 🏆"
+                ];
+                
+                const celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
+                this.displayAIResponse(celebration);
+                this.speak(celebration);
+                
+                this.addCelebrationEffect();
+            }
+            
+            addCelebrationEffect() {
+                const effects = ['🎉', '🌟', '💫', '🚀', '🏆', '⭐', '✨'];
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(() => {
+                        const effect = document.createElement('div');
+                        effect.textContent = effects[Math.floor(Math.random() * effects.length)];
+                        effect.style.cssText = `
+                            position: fixed;
+                            top: ${Math.random() * 100}vh;
+                            left: ${Math.random() * 100}vw;
+                            font-size: 2rem;
+                            pointer-events: none;
+                            z-index: 10000;
+                            animation: floatUp 1s ease-out forwards;
+                        `;
+                        document.body.appendChild(effect);
+                        
+                        setTimeout(() => effect.remove(), 1000);
+                    }, i * 100);
+                }
+            }
+            
+            generateAIResponse(question) {
+                const lowerQ = question.toLowerCase();
+                if (lowerQ.includes('math') || lowerQ.includes('fraction')) {
+                    return this.responses.math[Math.floor(Math.random() * this.responses.math.length)];
+                }
+                if (lowerQ.includes('science') || lowerQ.includes('force')) {
+                    return this.responses.science[Math.floor(Math.random() * this.responses.science.length)];
+                }
+                if (lowerQ.includes('english') || lowerQ.includes('write')) {
+                    return this.responses.english[Math.floor(Math.random() * this.responses.english.length)];
+                }
+                if (lowerQ.includes('ai') || lowerQ.includes('artificial')) {
+                    return this.responses.ai[Math.floor(Math.random() * this.responses.ai.length)];
+                }
+                if (lowerQ.includes('robot')) {
+                    return this.responses.robotics[Math.floor(Math.random() * this.responses.robotics.length)];
+                }
+                return this.responses.motivation[Math.floor(Math.random() * this.responses.motivation.length)];
+            }
+            
+            displayAIResponse(message) {
+                let responseElement = document.querySelector('.ai-response');
+                if (!responseElement) {
+                    responseElement = document.createElement('div');
+                    responseElement.className = 'ai-response';
+                    responseElement.style.cssText = `
+                        background: rgba(255,255,255,0.1);
+                        padding: 15px;
+                        border-radius: 10px;
+                        margin: 15px 0;
+                        border-left: 4px solid #10b981;
+                    `;
+                    document.querySelector('.ultimate-ai-panel').appendChild(responseElement);
+                }
+                
+                responseElement.innerHTML = `
+                    <div style="display: flex; align-items: flex-start; gap: 10px;">
+                        <div style="font-size: 1.2rem;">🧠</div>
+                        <div style="flex: 1;">
+                            <strong>AI Assistant:</strong> ${message}
+                            <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 5px;">
+                                MindFlow AI • Powered by MindTech • ${this.voiceReady ? 'Voice Active' : 'Text Mode'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            speak(text) {
+                if (!this.voiceReady) return;
+                
+                speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                
+                speechSynthesis.speak(utterance);
+            }
+            
+            transformCurriculum() {
+                document.querySelectorAll('.module-item').forEach(module => {
+                    module.style.cursor = 'pointer';
+                    
+                    module.addEventListener('click', (e) => {
+                        if (e.target.closest('.module-actions')) return;
+                        
+                        const moduleName = module.querySelector('h4').textContent;
+                        const subject = module.closest('.subject-card').querySelector('h3').textContent;
+                        
+                        this.launchModule(moduleName, subject, module);
+                    });
+                    
+                    module.addEventListener('mouseenter', () => {
+                        module.classList.add('module-ai-hover');
+                    });
+                    
+                    module.addEventListener('mouseleave', () => {
+                        module.classList.remove('module-ai-hover');
+                    });
+                });
+                
+                document.querySelectorAll('.subject-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.classList.add('subject-ai-active');
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        card.classList.remove('subject-ai-active');
+                    });
+                });
+            }
+            
+            launchModule(moduleName, subject, element) {
+                this.speak(`Starting ${moduleName}. Get ready to learn!`);
+                
+                element.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+                element.style.color = 'white';
+                element.style.transform = 'scale(1.02)';
+                
+                setTimeout(() => {
+                    const message = `🚀 LAUNCHING LEARNING MODULE:\n\n${moduleName}\n\nSubject: ${subject}\n\nThis would open an interactive lesson with:\n• Step-by-step explanations\n• Practice exercises\n• Real African examples\n• Progress tracking`;
+                    
+                    if (confirm(message + "\n\nContinue to lesson?")) {
+                        alert('🎯 Lesson player would launch here!\n\nFeatures: Interactive exercises, AI guidance, progress tracking');
+                    }
+                    
+                    element.style.background = '';
+                    element.style.color = '';
+                    element.style.transform = '';
+                }, 1000);
+            }
+            
+            showAIBadge() {
+                const badge = document.createElement('div');
+                badge.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: #10b981;
+                    color: white;
+                    padding: 8px 12px;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    z-index: 1000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                `;
+                badge.textContent = '🧠 MindFlow AI Active';
+                badge.title = 'Powered by MindTech - Voice Enabled';
+                
+                document.body.appendChild(badge);
+            }
+        }
+
+        // Initialize MindFlow AI
+        window.mindFlowAI = new MindFlowAI();
+
+        // Curriculum functionality
         document.addEventListener('DOMContentLoaded', function() {
-            loadComponent('header-container', 'components/header.html');
-            loadComponent('footer-container', 'components/footer.html');
+            // Initialize AI
+            window.mindFlowAI.init();
 
             // Filter functionality
             const filterBtns = document.querySelectorAll('.filter-btn');
@@ -719,11 +1323,9 @@
                 btn.addEventListener('click', function() {
                     const filter = this.dataset.filter;
                     
-                    // Update active button
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
 
-                    // Filter cards
                     subjectCards.forEach(card => {
                         if (filter === 'all' || card.dataset.subject === filter) {
                             card.style.display = 'block';
@@ -734,13 +1336,16 @@
                 });
             });
 
-            // Module click handlers
-            const moduleItems = document.querySelectorAll('.module-item');
-            moduleItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (!e.target.closest('.module-actions')) {
-                        const moduleName = this.querySelector('h4').textContent;
-                        alert(`Starting module: ${moduleName}`);
+            // Search functionality
+            const searchInput = document.querySelector('.search-box input');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                subjectCards.forEach(card => {
+                    const cardText = card.textContent.toLowerCase();
+                    if (cardText.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
                     }
                 });
             });
