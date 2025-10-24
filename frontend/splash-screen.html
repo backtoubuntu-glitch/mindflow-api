@@ -3,275 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindFlow - Loading</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <title>MindFlow AI - Loading</title>
     <style>
-        .splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            color: white;
+            overflow: hidden;
         }
-
-        .splash-logo {
+        
+        .splash-container {
             text-align: center;
-            margin-bottom: 3rem;
-            animation: float 3s ease-in-out infinite;
+            color: white;
+            animation: fadeIn 1.5s ease-in;
         }
-
-        .logo-main {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--accent), #fff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        
+        .brain-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite, float 3s ease-in-out infinite;
         }
-
-        .logo-text {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        
+        .logo {
+            font-size: 3.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
-        .logo-tagline {
-            font-size: 1.2rem;
+        
+        .tagline {
+            font-size: 1.2em;
+            margin-bottom: 30px;
             opacity: 0.9;
         }
-
-        .loading-container {
-            text-align: center;
-            width: 300px;
+        
+        .powered-by {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-bottom: 40px;
         }
-
+        
         .loading-bar {
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
+            width: 200px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin: 0 auto;
             overflow: hidden;
-            margin-bottom: 1rem;
         }
-
+        
         .loading-progress {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--success));
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.3s ease;
+            background: white;
+            border-radius: 2px;
+            animation: loading 2s ease-in-out;
+            transform-origin: left;
         }
-
-        .loading-text {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            opacity: 0.8;
-        }
-
-        .loading-features {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
+        
+        .mission-text {
+            margin-top: 30px;
+            font-size: 0.9em;
             max-width: 400px;
-            margin-top: 2rem;
-        }
-
-        .feature-item {
-            text-align: center;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: featureFadeIn 0.5s ease forwards;
-        }
-
-        .feature-item:nth-child(1) { animation-delay: 0.5s; }
-        .feature-item:nth-child(2) { animation-delay: 1s; }
-        .feature-item:nth-child(3) { animation-delay: 1.5s; }
-
-        .feature-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
-        }
-
-        .feature-label {
-            font-size: 0.8rem;
+            line-height: 1.5;
             opacity: 0.8;
         }
-
-        .ai-welcome {
-            margin-top: 2rem;
-            text-align: center;
-            opacity: 0;
-            animation: fadeIn 1s ease 2s forwards;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .ai-avatar {
-            width: 60px;
-            height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            border: 2px solid var(--accent);
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
-
-        .ai-avatar i {
-            font-size: 1.5rem;
-            color: var(--accent);
-        }
-
-        .ai-message {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 15px;
-            max-width: 300px;
-            margin: 0 auto;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
+        
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
-
-        @keyframes featureFadeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        @keyframes loading {
+            0% { transform: scaleX(0); }
+            100% { transform: scaleX(1); }
         }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
         }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
 <body>
-    <div class="splash-screen">
-        <div class="splash-logo">
-            <div class="logo-main">
-                <i class="fas fa-brain"></i>
-            </div>
-            <div class="logo-text">MindFlow</div>
-            <div class="logo-tagline">Powered by MindTech</div>
+    <div class="splash-container">
+        <div class="brain-icon">🧠</div>
+        <div class="logo">MindFlow</div>
+        <div class="tagline">AI-Powered Learning Platform</div>
+        <div class="powered-by">Powered by MindTech Industries</div>
+        
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
         </div>
-
-        <div class="loading-container">
-            <div class="loading-bar">
-                <div class="loading-progress" id="loadingProgress"></div>
-            </div>
-            <div class="loading-text" id="loadingText">Initializing Khensani AI...</div>
-            
-            <div class="loading-features">
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="feature-label">AI Powered</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div class="feature-label">Safe Learning</div>
-                </div>
-                <div class="feature-item">
-                    <div class="feature-icon">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <div class="feature-label">Interactive</div>
-                </div>
-            </div>
+        
+        <div class="features">
+            <div class="feature">🤖 AI Assistant</div>
+            <div class="feature">🛡️ Safety Tracking</div>
+            <div class="feature">📚 2025 Curriculum</div>
         </div>
-
-        <div class="ai-welcome">
-            <div class="ai-avatar pulse">
-                <i class="fas fa-robot"></i>
-            </div>
-            <div class="ai-message">
-                "Hello! I'm Khensani, your AI learning assistant. Getting everything ready for you..."
-            </div>
+        
+        <div class="mission-text">
+            Making quality AI-powered education accessible to every African child with sustainable corporate partnerships
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const progressBar = document.getElementById('loadingProgress');
-            const loadingText = document.getElementById('loadingText');
-            const steps = [
-                { text: "Initializing Khensani AI...", duration: 1000 },
-                { text: "Loading curriculum data...", duration: 800 },
-                { text: "Setting up safety features...", duration: 600 },
-                { text: "Preparing interactive games...", duration: 700 },
-                { text: "Almost ready...", duration: 500 },
-                { text: "Welcome to MindFlow!", duration: 400 }
-            ];
-
-            let currentStep = 0;
-            let totalDuration = steps.reduce((sum, step) => sum + step.duration, 0);
-            let elapsed = 0;
-
-            function updateProgress() {
-                if (currentStep < steps.length) {
-                    const step = steps[currentStep];
-                    loadingText.textContent = step.text;
-                    
-                    setTimeout(() => {
-                        elapsed += step.duration;
-                        const progress = (elapsed / totalDuration) * 100;
-                        progressBar.style.width = Math.min(progress, 100) + '%';
-                        currentStep++;
-                        updateProgress();
-                    }, step.duration);
-                } else {
-                    // Redirect to appropriate page after loading
-                    setTimeout(() => {
-                        // Check if user is logged in (you would replace this with actual auth check)
-                        const isLoggedIn = localStorage.getItem('mindflow_user') !== null;
-                        if (isLoggedIn) {
-                            window.location.href = 'dashboard.html';
-                        } else {
-                            window.location.href = 'onboarding.html';
-                        }
-                    }, 1000);
-                }
-            }
-
-            // Start the loading sequence
-            updateProgress();
-
-            // Add click to skip functionality (for testing)
-            document.addEventListener('click', function() {
-                window.location.href = 'onboarding.html';
-            });
-
-            // Add keyboard skip
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' || e.key === ' ') {
-                    window.location.href = 'onboarding.html';
-                }
-            });
+        // Redirect to main page after splash
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 4000);
+        
+        // Add some interactive elements
+        document.addEventListener('click', function() {
+            const brain = document.querySelector('.brain-icon');
+            brain.style.animation = 'none';
+            setTimeout(() => {
+                brain.style.animation = 'pulse 2s infinite, float 3s ease-in-out infinite';
+            }, 10);
         });
     </script>
 </body>

@@ -1,4 +1,0 @@
-2025-10-21 06:24:46 [error]: Unable to connect to the database:
-{
-  "service": "mindflow-api"
-}

@@ -1,0 +1,32 @@
+/* FORCE CONSISTENCY ACROSS ALL PAGES */
+body {
+  font-family: 'Exo 2', sans-serif !important;
+  background: var(--dark-space) !important;
+  color: var(--pure-white) !important;
+}
+
+/* Override any existing navigation */
+nav, .navbar, header nav {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid #2A2A2A !important;
+  padding: 1rem 2rem !important;
+}
+
+/* Force tech cards everywhere */
+.card, .feature-card, .subject-card {
+  background: var(--card-surface) !important;
+  border: 1px solid #2A2A2A !important;
+  border-radius: 12px !important;
+  padding: 25px !important;
+}
+
+/* Force buttons */
+button, .btn, .button {
+  background: linear-gradient(135deg, var(--cyber-blue), #B026FF) !important;
+  color: var(--pure-white) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: 'Exo 2', sans-serif !important;
+  font-weight: 600 !important;
+}

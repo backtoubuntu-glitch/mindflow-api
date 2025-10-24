@@ -1,750 +1,244 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curriculum - MindFlow</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Exo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/components.css">
+    <title>Khensani AI - MindFlow</title>
+    <link rel="stylesheet" href="assets/css/global-deep-tech.css">
     <style>
         .curriculum-hero {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            padding: 3rem 0;
-            color: white;
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            padding: 120px 20px 60px;
             text-align: center;
+            position: relative;
         }
-
-        .curriculum-container {
-            padding: 2rem 0;
-            background: #f8fafc;
-            min-height: 80vh;
+        
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
-        .curriculum-nav {
-            background: white;
-            padding: 1.5rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .subject-filters {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--light);
-            background: white;
-            border-radius: 25px;
+        
+        .subject-card {
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
         }
-
-        .filter-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .search-box {
-            position: relative;
-            min-width: 250px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            border: 2px solid var(--light);
-            border-radius: 25px;
-            background: white;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--dark);
-            opacity: 0.7;
-        }
-
-        .curriculum-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .subject-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
+        
         .subject-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: var(--tech-glow);
         }
-
-        .subject-header {
-            padding: 1.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
+        
         .subject-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
+            font-size: 3em;
+            margin-bottom: 15px;
         }
-
-        .subject-info h3 {
-            margin: 0;
-            font-size: 1.3rem;
+        
+        .upload-section {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 20px;
+            text-align: center;
+            border: 2px dashed var(--cyber-blue);
         }
-
-        .subject-info p {
-            margin: 0.2rem 0 0 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
+        
+        .khensani-section {
+            background: linear-gradient(135deg, var(--cyber-blue), #B026FF);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px 20px;
+            text-align: center;
         }
-
-        .subject-progress {
-            padding: 1rem 1.5rem;
-            background: var(--light);
-        }
-
-        .progress-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
+        
         .progress-bar {
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
+            background: #2A2A2A;
+            border-radius: 10px;
+            height: 8px;
+            margin: 15px 0;
             overflow: hidden;
         }
-
+        
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--success), var(--accent));
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-
-        .modules-list {
-            padding: 1.5rem;
-        }
-
-        .module-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--light);
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .module-item:last-child {
-            border-bottom: none;
-        }
-
-        .module-item:hover {
-            background: #f8fafc;
-        }
-
-        .module-status {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-
-        .module-status.completed {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
-        .module-status.current {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        .module-details {
-            flex: 1;
-        }
-
-        .module-details h4 {
-            margin: 0 0 0.3rem 0;
-            font-size: 1rem;
-        }
-
-        .module-details p {
-            margin: 0;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .module-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .ai-recommendation {
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem 0;
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .ai-avatar {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-        }
-
-        .recommendation-content {
-            flex: 1;
-        }
-
-        .recommendation-content h3 {
-            margin: 0 0 0.5rem 0;
-        }
-
-        .recommendation-content p {
-            margin: 0;
-            opacity: 0.9;
-        }
-
-        .difficulty-badge {
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-
-        .difficulty-beginner { background: var(--success); color: white; }
-        .difficulty-intermediate { background: var(--warning); color: white; }
-        .difficulty-advanced { background: var(--primary); color: white; }
-
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .subject-filters {
-                justify-content: center;
-            }
-
-            .curriculum-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .ai-recommendation {
-                flex-direction: column;
-                text-align: center;
-            }
+            background: linear-gradient(90deg, var(--cyber-blue), #00FF41);
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
-    <!-- Header Component -->
-    <div id="header-container"></div>
-
-    <!-- Hero Section -->
-    <section class="curriculum-hero">
-        <div class="container">
-            <h1>Your Learning Journey</h1>
-            <p>Personalized curriculum powered by Khensani AI</p>
-            <div class="hero-stats">
-                <div class="stat">
-                    <div class="stat-number">78%</div>
-                    <div class="stat-label">Overall Progress</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Skills Mastered</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">5</div>
-                    <div class="stat-label">Active Subjects</div>
-                </div>
-            </div>
+    <!-- Consistent Navigation -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
         </div>
-    </section>
-
-    <!-- Curriculum Navigation -->
-    <nav class="curriculum-nav">
-        <div class="container nav-container">
-            <div class="subject-filters">
-                <button class="filter-btn active" data-filter="all">All Subjects</button>
-                <button class="filter-btn" data-filter="mathematics">Mathematics</button>
-                <button class="filter-btn" data-filter="science">Science</button>
-                <button class="filter-btn" data-filter="english">English</button>
-                <button class="filter-btn" data-filter="chess">Chess</button>
-                <button class="filter-btn" data-filter="robotics">Robotics</button>
-            </div>
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search lessons and topics...">
-            </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link active">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="parent-teacher-portal.html" class="nav-link">Parent Portal</a>
+            <a href="corporate-portal.html" class="nav-link">Corporate</a>
+            <a href="safety.html" class="nav-link">Safety</a>
+            <a href="login.html" class="nav-link">Login</a>
         </div>
     </nav>
 
-    <main class="curriculum-container">
-        <div class="container">
-            <!-- AI Recommendation -->
-            <div class="ai-recommendation">
-                <div class="ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="recommendation-content">
-                    <h3>📚 Khensani's Recommendation</h3>
-                    <p>"Based on your progress, I recommend focusing on <strong>Fraction Operations</strong> in Mathematics next. You're doing great with basic fractions - let's level up!"</p>
-                </div>
-                <button class="btn btn-light">
-                    <i class="fas fa-play"></i>
-                    Start Now
-                </button>
+    <!-- Hero Section -->
+    <section class="curriculum-hero">
+        <div class="hero-content">
+            <h1 class="main-heading">KHENSANI AI</h1>
+            <p style="font-size: 1.3em; margin-bottom: 30px; opacity: 0.9;">
+                Your AI Learning Assistant • Voice Enabled • Document Intelligence
+            </p>
+            <button class="tech-btn" onclick="startVoiceAI()">🎤 Talk to Khensani</button>
+        </div>
+    </section>
+
+    <!-- Document Upload -->
+    <section class="upload-section">
+        <h2 class="tech-heading">📁 Upload Learning Materials</h2>
+        <p>Khensani AI can analyze any document and help you understand it</p>
+        <div style="margin: 30px 0;">
+            <button class="tech-btn" onclick="uploadDocument()">📄 Upload PDF/DOC/PPT</button>
+            <button class="tech-btn" style="background: transparent; border: 2px solid var(--cyber-blue);" 
+                    onclick="showSupportedFormats()">📋 Supported Formats</button>
+        </div>
+        <div class="ad-children-spot"></div>
+    </section>
+
+    <!-- Subjects Grid -->
+    <section class="subject-grid">
+        <div class="tech-card subject-card" onclick="openSubject('ai')">
+            <div class="subject-icon">🤖</div>
+            <h3 class="tech-heading">AI & Machine Learning</h3>
+            <p>Learn neural networks, computer vision, and AI ethics with hands-on projects.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%"></div>
             </div>
+            <small>12 Modules • 45 Lessons</small>
+        </div>
 
-            <!-- Curriculum Grid -->
-            <div class="curriculum-grid">
-                <!-- Mathematics Card -->
-                <div class="subject-card" data-subject="mathematics">
-                    <div class="subject-header">
-                        <div class="subject-icon">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <div class="subject-info">
-                            <h3>Mathematics <span class="difficulty-badge difficulty-intermediate">Grade 4</span></h3>
-                            <p>Numbers, Operations, Geometry & Problem Solving</p>
-                        </div>
-                    </div>
-                    <div class="subject-progress">
-                        <div class="progress-info">
-                            <span>Progress</span>
-                            <span>78%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 78%"></div>
-                        </div>
-                    </div>
-                    <div class="modules-list">
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Basic Number Operations</h4>
-                                <p>Addition, subtraction, multiplication</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Introduction to Fractions</h4>
-                                <p>Understanding parts of a whole</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status current">
-                                <i class="fas fa-play"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Fraction Operations</h4>
-                                <p>Adding, subtracting fractions</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-primary btn-sm">
-                                    Continue
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Geometry Basics</h4>
-                                <p>Shapes, angles, and measurements</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-secondary btn-sm" disabled>
-                                    Locked
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="tech-card subject-card" onclick="openSubject('robotics')">
+            <div class="subject-icon">🔧</div>
+            <h3 class="tech-heading">Robotics & Engineering</h3>
+            <p>Arduino, sensors, and African innovation projects with practical builds.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 15%"></div>
+            </div>
+            <small>8 Modules • 32 Lessons</small>
+        </div>
 
-                <!-- Science Card -->
-                <div class="subject-card" data-subject="science">
-                    <div class="subject-header">
-                        <div class="subject-icon">
-                            <i class="fas fa-flask"></i>
-                        </div>
-                        <div class="subject-info">
-                            <h3>Science <span class="difficulty-badge difficulty-beginner">Grade 4</span></h3>
-                            <p>Biology, Physics, Chemistry & Earth Science</p>
-                        </div>
-                    </div>
-                    <div class="subject-progress">
-                        <div class="progress-info">
-                            <span>Progress</span>
-                            <span>65%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 65%"></div>
-                        </div>
-                    </div>
-                    <div class="modules-list">
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Living Things</h4>
-                                <p>Plants, animals, and ecosystems</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status current">
-                                <i class="fas fa-play"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Forces and Motion</h4>
-                                <p>Push, pull, gravity, and friction</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-primary btn-sm">
-                                    Continue
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>States of Matter</h4>
-                                <p>Solid, liquid, gas, and changes</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-secondary btn-sm" disabled>
-                                    Locked
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="tech-card subject-card" onclick="openSubject('mathematics')">
+            <div class="subject-icon">📐</div>
+            <h3 class="tech-heading">Mathematics</h3>
+            <p>Algebra, geometry, calculus with AI-guided problem solving and real-world applications.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <small>20 Modules • 85 Lessons</small>
+        </div>
 
-                <!-- English Card -->
-                <div class="subject-card" data-subject="english">
-                    <div class="subject-header">
-                        <div class="subject-icon">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="subject-info">
-                            <h3>English <span class="difficulty-badge difficulty-intermediate">Grade 4</span></h3>
-                            <p>Reading, Writing, Grammar & Comprehension</p>
-                        </div>
-                    </div>
-                    <div class="subject-progress">
-                        <div class="progress-info">
-                            <span>Progress</span>
-                            <span>82%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 82%"></div>
-                        </div>
-                    </div>
-                    <div class="modules-list">
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Reading Comprehension</h4>
-                                <p>Understanding stories and texts</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Grammar Basics</h4>
-                                <p>Nouns, verbs, and sentence structure</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status current">
-                                <i class="fas fa-play"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Creative Writing</h4>
-                                <p>Storytelling and expression</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-primary btn-sm">
-                                    Continue
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="tech-card subject-card" onclick="openSubject('science')">
+            <div class="subject-icon">🔬</div>
+            <h3 class="tech-heading">Science</h3>
+            <p>Physics, chemistry, biology with virtual labs and African scientific innovations.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 30%"></div>
+            </div>
+            <small>18 Modules • 70 Lessons</small>
+        </div>
 
-                <!-- Chess Academy -->
-                <div class="subject-card" data-subject="chess">
-                    <div class="subject-header">
-                        <div class="subject-icon">
-                            <i class="fas fa-chess-knight"></i>
-                        </div>
-                        <div class="subject-info">
-                            <h3>Chess Academy <span class="difficulty-badge difficulty-beginner">Beginner</span></h3>
-                            <p>Strategy, Tactics & Critical Thinking</p>
-                        </div>
-                    </div>
-                    <div class="subject-progress">
-                        <div class="progress-info">
-                            <span>Progress</span>
-                            <span>45%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 45%"></div>
-                        </div>
-                    </div>
-                    <div class="modules-list">
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Chess Basics</h4>
-                                <p>Piece movements and board setup</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status current">
-                                <i class="fas fa-play"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Opening Strategies</h4>
-                                <p>Starting the game strong</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-primary btn-sm">
-                                    Practice
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Tactical Patterns</h4>
-                                <p>Forks, pins, and skewers</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-secondary btn-sm" disabled>
-                                    Locked
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="tech-card subject-card" onclick="openSubject('programming')">
+            <div class="subject-icon">💻</div>
+            <h3 class="tech-heading">Programming</h3>
+            <p>Python, JavaScript, web development from basics to advanced AI programming.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 35%"></div>
+            </div>
+            <small>15 Modules • 60 Lessons</small>
+        </div>
 
-                <!-- Robotics Lab -->
-                <div class="subject-card" data-subject="robotics">
-                    <div class="subject-header">
-                        <div class="subject-icon">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="subject-info">
-                            <h3>Robotics Lab <span class="difficulty-badge difficulty-intermediate">Explorer</span></h3>
-                            <p>Programming, Engineering & Problem Solving</p>
-                        </div>
-                    </div>
-                    <div class="subject-progress">
-                        <div class="progress-info">
-                            <span>Progress</span>
-                            <span>30%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="modules-list">
-                        <div class="module-item">
-                            <div class="module-status completed">
-                                <i class="fas fa-check"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Introduction to Robotics</h4>
-                                <p>What robots can do</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn-icon">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status current">
-                                <i class="fas fa-play"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Basic Programming</h4>
-                                <p>Commands and sequences</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-primary btn-sm">
-                                    Start Lab
-                                </button>
-                            </div>
-                        </div>
-                        <div class="module-item">
-                            <div class="module-status">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="module-details">
-                                <h4>Sensor Programming</h4>
-                                <p>Making robots sense the world</p>
-                            </div>
-                            <div class="module-actions">
-                                <button class="btn btn-secondary btn-sm" disabled>
-                                    Locked
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="tech-card subject-card" onclick="openSubject('african-studies')">
+            <div class="subject-icon">🌍</div>
+            <h3 class="tech-heading">African Studies</h3>
+            <p>History, culture, languages, and innovation from African perspectives.</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 25%"></div>
+            </div>
+            <small>10 Modules • 40 Lessons</small>
+        </div>
+    </section>
+
+    <!-- Khensani AI Section -->
+    <section class="khensani-section">
+        <h2 class="tech-heading" style="-webkit-text-fill-color: white;">🤖 Khensani AI Assistant</h2>
+        <p style="margin: 20px 0; font-size: 1.1em;">Ask me anything about your subjects, upload documents for analysis, or use voice commands!</p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button class="tech-btn" onclick="startVoiceAI()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">🎤 Voice Chat</button>
+            <button class="tech-btn" onclick="openChat()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">💬 Text Chat</button>
+            <button class="tech-btn" onclick="showDocumentHelp()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">📚 Document Help</button>
+        </div>
+    </section>
+
+    <!-- Parent Ad Spot -->
+    <div class="ad-parents-spot" style="margin: 40px 20px;"></div>
+
+    <!-- Consistent Footer -->
+    <footer class="tech-footer">
+        <div style="text-align: center; padding: 40px 20px;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="ad-children-spot"></div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved.
             </div>
         </div>
-    </main>
+    </footer>
 
-    <!-- Footer Component -->
-    <div id="footer-container"></div>
-
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/enhanced-tracker.js"></script>
+    <script src="assets/js/ad-system.js"></script>
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            loadComponent('header-container', 'components/header.html');
-            loadComponent('footer-container', 'components/footer.html');
-
-            // Filter functionality
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const subjectCards = document.querySelectorAll('.subject-card');
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const filter = this.dataset.filter;
-                    
-                    // Update active button
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-
-                    // Filter cards
-                    subjectCards.forEach(card => {
-                        if (filter === 'all' || card.dataset.subject === filter) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-
-            // Module click handlers
-            const moduleItems = document.querySelectorAll('.module-item');
-            moduleItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    if (!e.target.closest('.module-actions')) {
-                        const moduleName = this.querySelector('h4').textContent;
-                        alert(`Starting module: ${moduleName}`);
-                    }
-                });
-            });
-        });
+        function startVoiceAI() {
+            alert("🎤 Khensani AI Voice System\n\nSay: 'Hello Khensani' or 'Help with mathematics'");
+        }
+        
+        function openSubject(subject) {
+            const subjects = {
+                'ai': "Loading AI Curriculum... 🤖",
+                'robotics': "Opening Robotics Projects... 🔧",
+                'mathematics': "Starting Mathematics... 📐", 
+                'science': "Launching Science Labs... 🔬",
+                'programming': "Opening Code Environment... 💻",
+                'african-studies': "Exploring African Studies... 🌍"
+            };
+            alert(subjects[subject] || "Loading subject content...");
+        }
+        
+        function uploadDocument() {
+            alert("📁 Document Upload\n\nSupported: PDF, DOC, PPT, Images\nKhensani will analyze and help you understand the content!");
+        }
+        
+        function openChat() {
+            alert("💬 Khensani Chat\n\nAsk me about:\n• Mathematics problems\n• Science concepts\n• Document explanations\n• Learning strategies");
+        }
+        
+        function showSupportedFormats() {
+            alert("📋 Supported Formats:\n\n• PDF documents\n• Word documents (DOC/DOCX)\n• Presentations (PPT/PPTX)\n• Images (JPG/PNG)\n• Text files\n• Audio recordings");
+        }
+        
+        function showDocumentHelp() {
+            alert("📚 Document Intelligence:\n\n• PDF text extraction\n• Image OCR and analysis\n• Presentation content parsing\n• Audio transcription\n• Cross-document search");
+        }
     </script>
 </body>
 </html>

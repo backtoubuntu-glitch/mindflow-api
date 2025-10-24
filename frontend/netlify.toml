@@ -1,0 +1,13 @@
+﻿{
+  \"build\": {
+    \"publish\": \".\",
+    \"command\": \"echo 'No build needed for static HTML'\"
+  },
+  \"redirects\": [
+    {
+      \"from\": \"/*\",
+      \"to\": \"/index.html\",
+      \"status\": 200
+    }
+  ]
+}

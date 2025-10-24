@@ -1,230 +1,379 @@
-﻿class VoiceAI {
+﻿// MindFlow AI - Advanced Voice Interaction System (Production)
+// ============================================================
+
+class VoiceAI {
     constructor() {
-        this.speechRecognition = null;
+        this.API_BASE = 'https://mindflow-ai.onrender.com/api';
+        this.recognition = null;
         this.synthesis = null;
         this.isListening = false;
         this.isSpeaking = false;
-        this.audioContext = null;
-        this.audioQueue = [];
-        this.supportedVoices = [];
-        this.currentLanguage = 'en-ZA';
+        this.transcript = '';
+        this.commands = new Map();
         this.init();
     }
 
     init() {
-        this.checkBrowserSupport();
-        this.loadVoices();
+        console.log('🎤 Voice AI Initialized');
+        this.setupSpeechRecognition();
+        this.setupSpeechSynthesis();
+        this.setupVoiceCommands();
         this.setupEventListeners();
-        
-        console.log('Voice AI Engine Initialized');
+        this.checkBrowserSupport();
     }
 
-    checkBrowserSupport() {
-        // Check Speech Recognition support
+    // ==================== SPEECH RECOGNITION ====================
+
+    setupSpeechRecognition() {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            console.warn('Speech recognition not supported in this browser');
-            return false;
+            console.warn('⚠️ Speech Recognition not supported');
+            this.showVoiceStatus('unsupported', 'Voice commands not available in your browser');
+            return;
         }
 
-        // Check Speech Synthesis support
-        if (!('speechSynthesis' in window)) {
-            console.warn('Speech synthesis not supported in this browser');
-            return false;
-        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        this.recognition = new SpeechRecognition();
 
-        return true;
+        // Configuration
+        this.recognition.continuous = false;
+        this.recognition.interimResults = true;
+        this.recognition.lang = 'en-US';
+        this.recognition.maxAlternatives = 3;
+
+        // Event handlers
+        this.recognition.onstart = this.onRecognitionStart.bind(this);
+        this.recognition.onresult = this.onRecognitionResult.bind(this);
+        this.recognition.onerror = this.onRecognitionError.bind(this);
+        this.recognition.onend = this.onRecognitionEnd.bind(this);
+
+        console.log('✅ Speech Recognition configured');
     }
 
-    setupEventListeners() {
-        // Voice control buttons
-        this.safeAddEventListener('startListening', 'click', () => this.startListening());
-        this.safeAddEventListener('stopListening', 'click', () => this.stopListening());
-        this.safeAddEventListener('speakText', 'click', () => this.speakText());
+    onRecognitionStart() {
+        this.isListening = true;
+        this.transcript = '';
+        this.showVoiceStatus('listening', 'Listening... Speak now');
+        this.updateVoiceUI('active');
+        console.log('🎤 Speech recognition started');
+    }
 
-        // Language selection
-        const languageSelect = document.getElementById('voiceLanguage');
-        if (languageSelect) {
-            languageSelect.addEventListener('change', (e) => {
-                this.setLanguage(e.target.value);
-            });
+    onRecognitionResult(event) {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                finalTranscript += transcript;
+            } else {
+                interimTranscript += transcript;
+            }
         }
 
-        // Voice selection
-        const voiceSelect = document.getElementById('voiceSelect');
-        if (voiceSelect) {
-            voiceSelect.addEventListener('change', (e) => {
-                this.setVoice(e.target.value);
-            });
+        // Update display
+        this.updateTranscriptDisplay(finalTranscript, interimTranscript);
+        
+        if (finalTranscript) {
+            this.transcript = finalTranscript;
+            this.processVoiceCommand(finalTranscript);
+        }
+    }
+
+    onRecognitionError(event) {
+        console.error('❌ Speech recognition error:', event.error);
+        
+        let errorMessage = 'Voice recognition error: ';
+        switch(event.error) {
+            case 'no-speech':
+                errorMessage = 'No speech detected';
+                break;
+            case 'audio-capture':
+                errorMessage = 'No microphone found';
+                break;
+            case 'not-allowed':
+                errorMessage = 'Microphone permission denied';
+                break;
+            case 'network':
+                errorMessage = 'Network error occurred';
+                break;
+            default:
+                errorMessage = `Error: ${event.error}`;
+        }
+        
+        this.showVoiceStatus('error', errorMessage);
+        this.updateVoiceUI('error');
+    }
+
+    onRecognitionEnd() {
+        this.isListening = false;
+        this.showVoiceStatus('ready', 'Click microphone to speak');
+        this.updateVoiceUI('ready');
+        console.log('🛑 Speech recognition ended');
+    }
+
+    // ==================== SPEECH SYNTHESIS ====================
+
+    setupSpeechSynthesis() {
+        if (!('speechSynthesis' in window)) {
+            console.warn('⚠️ Speech Synthesis not supported');
+            return;
         }
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === ' ') { // Ctrl+Space to toggle listening
-                e.preventDefault();
-                this.toggleListening();
+        this.synthesis = window.speechSynthesis;
+        this.voices = [];
+        
+        // Load available voices
+        this.loadVoices();
+        
+        // Re-load voices when changed
+        this.synthesis.onvoiceschanged = this.loadVoices.bind(this);
+
+        console.log('✅ Speech Synthesis configured');
+    }
+
+    loadVoices() {
+        this.voices = this.synthesis.getVoices();
+        console.log(`🎙️ Loaded ${this.voices.length} voices`);
+        
+        // Prefer natural-sounding voices
+        this.preferredVoice = this.voices.find(voice => 
+            voice.name.includes('Google') || 
+            voice.name.includes('Natural') ||
+            voice.lang.includes('en-US')
+        ) || this.voices[0];
+    }
+
+    async speak(text, options = {}) {
+        if (!this.synthesis || this.isSpeaking) {
+            return false;
+        }
+
+        return new Promise((resolve) => {
+            try {
+                this.isSpeaking = true;
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                
+                // Configure voice
+                if (this.preferredVoice) {
+                    utterance.voice = this.preferredVoice;
+                }
+                
+                // Configure speech properties
+                utterance.rate = options.rate || 0.9;
+                utterance.pitch = options.pitch || 1.0;
+                utterance.volume = options.volume || 0.8;
+                
+                // Event handlers
+                utterance.onstart = () => {
+                    this.showVoiceStatus('speaking', 'Khensani is speaking...');
+                    this.updateVoiceUI('speaking');
+                    console.log('🗣️ Started speaking:', text);
+                };
+                
+                utterance.onend = () => {
+                    this.isSpeaking = false;
+                    this.showVoiceStatus('ready', 'Click microphone to speak');
+                    this.updateVoiceUI('ready');
+                    console.log('✅ Finished speaking');
+                    resolve(true);
+                };
+                
+                utterance.onerror = (event) => {
+                    this.isSpeaking = false;
+                    console.error('❌ Speech synthesis error:', event.error);
+                    this.showVoiceStatus('error', 'Speech synthesis failed');
+                    this.updateVoiceUI('error');
+                    resolve(false);
+                };
+                
+                // Speak
+                this.synthesis.speak(utterance);
+                
+            } catch (error) {
+                console.error('❌ Speech error:', error);
+                this.isSpeaking = false;
+                resolve(false);
             }
         });
     }
 
-    safeAddEventListener(elementId, event, handler) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.addEventListener(event, handler);
+    stopSpeaking() {
+        if (this.synthesis && this.isSpeaking) {
+            this.synthesis.cancel();
+            this.isSpeaking = false;
+            this.showVoiceStatus('ready', 'Speech stopped');
+            this.updateVoiceUI('ready');
         }
     }
 
-    loadVoices() {
-        // Wait for voices to be loaded
-        speechSynthesis.addEventListener('voiceschanged', () => {
-            this.supportedVoices = speechSynthesis.getVoices();
-            this.populateVoiceSelect();
-        });
+    // ==================== VOICE COMMANDS ====================
 
-        // Initial load
-        this.supportedVoices = speechSynthesis.getVoices();
-        if (this.supportedVoices.length > 0) {
-            this.populateVoiceSelect();
+    setupVoiceCommands() {
+        // Educational commands
+        this.commands.set('help', this.handleHelpCommand.bind(this));
+        this.commands.set('explain', this.handleExplainCommand.bind(this));
+        this.commands.set('quiz', this.handleQuizCommand.bind(this));
+        this.commands.set('hint', this.handleHintCommand.bind(this));
+        
+        // Navigation commands
+        this.commands.set('go to', this.handleNavigationCommand.bind(this));
+        this.commands.set('open', this.handleNavigationCommand.bind(this));
+        this.commands.set('back', this.handleBackCommand.bind(this));
+        
+        // Game commands
+        this.commands.set('move', this.handleChessMoveCommand.bind(this));
+        this.commands.set('undo', this.handleUndoCommand.bind(this));
+        this.commands.set('new game', this.handleNewGameCommand.bind(this));
+        
+        // System commands
+        this.commands.set('stop', this.handleStopCommand.bind(this));
+        this.commands.set('repeat', this.handleRepeatCommand.bind(this));
+        
+        console.log(`✅ ${this.commands.size} voice commands loaded`);
+    }
+
+    processVoiceCommand(transcript) {
+        const lowerTranscript = transcript.toLowerCase().trim();
+        console.log(`🎯 Processing command: "${lowerTranscript}"`);
+        
+        let commandHandled = false;
+        
+        // Check for exact command matches first
+        for (const [command, handler] of this.commands) {
+            if (lowerTranscript.includes(command)) {
+                handler(transcript);
+                commandHandled = true;
+                break;
+            }
+        }
+        
+        // If no specific command matched, send to Khensani AI
+        if (!commandHandled) {
+            this.handleGeneralQuery(transcript);
+        }
+        
+        // Show visual feedback
+        this.showCommandFeedback(transcript, commandHandled);
+    }
+
+    // ==================== COMMAND HANDLERS ====================
+
+    async handleHelpCommand(transcript) {
+        const helpResponses = [
+            "I can help you with learning, games, and navigation. Try saying 'explain algebra' or 'start quiz'.",
+            "You can ask me questions, request explanations, play chess, or navigate the platform. What would you like to do?",
+            "I'm here to help you learn! You can say things like 'help with math', 'play chess', or 'go to dashboard'."
+        ];
+        
+        const randomResponse = helpResponses[Math.floor(Math.random() * helpResponses.length)];
+        await this.speak(randomResponse);
+    }
+
+    async handleExplainCommand(transcript) {
+        const topic = transcript.replace('explain', '').trim();
+        if (topic) {
+            await this.speak(`Let me explain ${topic}. This is an educational moment where we explore concepts together.`);
+            // In full implementation, this would call the AI backend
+        } else {
+            await this.speak("What would you like me to explain? For example, say 'explain photosynthesis'.");
         }
     }
 
-    populateVoiceSelect() {
-        const voiceSelect = document.getElementById('voiceSelect');
-        if (!voiceSelect) return;
+    async handleQuizCommand(transcript) {
+        await this.speak("Starting a quiz! This feature helps reinforce your learning through interactive questions.");
+        // Would integrate with quiz system
+    }
 
-        voiceSelect.innerHTML = '';
+    async handleHintCommand(transcript) {
+        await this.speak("Here's a learning hint: Break complex problems into smaller steps. This helps understanding!");
+    }
 
-        this.supportedVoices.forEach((voice, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = \\ (\)\;
-            voiceSelect.appendChild(option);
-        });
-
-        // Select a default voice (prefer South African English)
-        const saVoice = this.supportedVoices.find(voice => 
-            voice.lang.includes('en-ZA') || voice.lang.includes('en-GB')
-        );
-        if (saVoice) {
-            voiceSelect.value = this.supportedVoices.indexOf(saVoice);
+    async handleNavigationCommand(transcript) {
+        const destination = transcript.replace(/go to|open/i, '').trim();
+        const pages = {
+            'dashboard': 'dashboard.html',
+            'chess': 'chess.html',
+            'chat': 'khensani-platform.html',
+            'safety': 'safety.html',
+            'profile': 'profile.html'
+        };
+        
+        if (pages[destination]) {
+            await this.speak(`Taking you to ${destination}`);
+            setTimeout(() => {
+                window.location.href = pages[destination];
+            }, 1000);
+        } else {
+            await this.speak(`I'm not sure how to navigate to ${destination}. Try saying dashboard, chess, or chat.`);
         }
     }
 
-    async startListening() {
+    async handleChessMoveCommand(transcript) {
+        if (typeof window.chessEngine !== 'undefined') {
+            await this.speak("Chess move command received. In the full version, I'll help you make moves verbally.");
+        } else {
+            await this.speak("Please open the chess game first to use voice moves.");
+        }
+    }
+
+    async handleGeneralQuery(transcript) {
+        // Send to Khensani AI backend
+        try {
+            this.showVoiceStatus('processing', 'Asking Khensani...');
+            
+            const response = await fetch(`${this.API_BASE}/ai/khensani/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: transcript,
+                    context: 'voice_command',
+                    userId: this.getCurrentUserId()
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                await this.speak(data.response || "I understand your question. Let me think about that.");
+            } else {
+                throw new Error('AI service unavailable');
+            }
+
+        } catch (error) {
+            console.error('❌ AI query failed:', error);
+            const fallbackResponse = this.getFallbackResponse(transcript);
+            await this.speak(fallbackResponse);
+        }
+    }
+
+    // ==================== VOICE CONTROL ====================
+
+    startListening() {
+        if (!this.recognition) {
+            this.showVoiceStatus('error', 'Speech recognition not available');
+            return false;
+        }
+
         if (this.isListening) {
             this.stopListening();
-            return;
-        }
-
-        if (!this.checkBrowserSupport()) {
-            this.showMessage('Voice recognition not supported in your browser', 'error');
-            return;
+            return false;
         }
 
         try {
-            await this.requestMicrophonePermission();
-            
-            this.speechRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            this.configureRecognition();
-            
-            this.speechRecognition.start();
-            this.isListening = true;
-            this.updateListeningUI(true);
-            
-            this.showMessage('Listening... Speak now!', 'info');
-            
-        } catch (error) {
-            console.error('Failed to start listening:', error);
-            this.showMessage('Failed to start voice recognition', 'error');
-        }
-    }
-
-    async requestMicrophonePermission() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            // Stop all tracks to release microphone
-            stream.getTracks().forEach(track => track.stop());
+            this.recognition.start();
             return true;
         } catch (error) {
-            throw new Error('Microphone permission denied');
+            console.error('❌ Failed to start recognition:', error);
+            this.showVoiceStatus('error', 'Failed to start listening');
+            return false;
         }
-    }
-
-    configureRecognition() {
-        this.speechRecognition.continuous = false;
-        this.speechRecognition.interimResults = true;
-        this.speechRecognition.lang = this.currentLanguage;
-        this.speechRecognition.maxAlternatives = 1;
-
-        this.speechRecognition.onstart = () => {
-            console.log('Speech recognition started');
-            this.isListening = true;
-        };
-
-        this.speechRecognition.onresult = (event) => {
-            const transcript = Array.from(event.results)
-                .map(result => result[0])
-                .map(result => result.transcript)
-                .join('');
-
-            const isFinal = event.results[0].isFinal;
-            
-            this.handleSpeechResult(transcript, isFinal);
-        };
-
-        this.speechRecognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
-            this.handleRecognitionError(event.error);
-        };
-
-        this.speechRecognition.onend = () => {
-            console.log('Speech recognition ended');
-            this.isListening = false;
-            this.updateListeningUI(false);
-        };
-    }
-
-    handleSpeechResult(transcript, isFinal) {
-        const resultElement = document.getElementById('speechResult');
-        if (resultElement) {
-            resultElement.textContent = transcript;
-            resultElement.classList.toggle('interim', !isFinal);
-        }
-
-        if (isFinal && transcript.trim()) {
-            this.processVoiceCommand(transcript);
-        }
-    }
-
-    handleRecognitionError(error) {
-        let errorMessage = 'Voice recognition error: ';
-        
-        switch(error) {
-            case 'no-speech':
-                errorMessage += 'No speech detected';
-                break;
-            case 'audio-capture':
-                errorMessage += 'No microphone found';
-                break;
-            case 'not-allowed':
-                errorMessage += 'Microphone access denied';
-                break;
-            case 'network':
-                errorMessage += 'Network error occurred';
-                break;
-            default:
-                errorMessage += error;
-        }
-
-        this.showMessage(errorMessage, 'error');
-        this.stopListening();
     }
 
     stopListening() {
-        if (this.speechRecognition && this.isListening) {
-            this.speechRecognition.stop();
-            this.isListening = false;
-            this.updateListeningUI(false);
-            this.showMessage('Stopped listening', 'info');
+        if (this.recognition && this.isListening) {
+            this.recognition.stop();
         }
     }
 
@@ -236,246 +385,219 @@
         }
     }
 
-    updateListeningUI(listening) {
-        const startBtn = document.getElementById('startListening');
-        const listeningIndicator = document.getElementById('listeningIndicator');
-        
-        if (startBtn) {
-            startBtn.innerHTML = listening ? 
-                '<i class=\"fas fa-microphone-slash\"></i> Stop' : 
-                '<i class=\"fas fa-microphone\"></i> Start';
-            startBtn.classList.toggle('active', listening);
-        }
-        
-        if (listeningIndicator) {
-            listeningIndicator.style.display = listening ? 'block' : 'none';
-        }
-    }
+    // ==================== UI MANAGEMENT ====================
 
-    async processVoiceCommand(transcript) {
-        console.log('Processing voice command:', transcript);
-        
-        // Show processing indicator
-        this.showMessage('Processing your request...', 'info');
-        
-        try {
-            // Send to Khensani AI backend
-            const response = await window.API.getKhensaniResponse(transcript, {
-                inputType: 'voice',
-                language: this.currentLanguage
-            });
-            
-            if (response.success) {
-                const aiResponse = response.data;
-                
-                // Display text response
-                this.displayAIResponse(aiResponse.text);
-                
-                // Speak the response
-                if (aiResponse.voice) {
-                    await this.speakAudio(aiResponse.voice);
-                } else {
-                    await this.speakText(aiResponse.text);
-                }
-                
-                // Show suggestions if available
-                if (aiResponse.suggestions) {
-                    this.showSuggestions(aiResponse.suggestions);
-                }
-                
-            } else {
-                throw new Error(response.message || 'AI response failed');
+    setupEventListeners() {
+        // Voice toggle button
+        const voiceBtn = document.getElementById('voiceToggle');
+        if (voiceBtn) {
+            voiceBtn.addEventListener('click', () => this.toggleListening());
+        }
+
+        // Stop speaking button
+        const stopBtn = document.getElementById('stopSpeaking');
+        if (stopBtn) {
+            stopBtn.addEventListener('click', () => this.stopSpeaking());
+        }
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === ' ') { // Ctrl+Space
+                event.preventDefault();
+                this.toggleListening();
             }
-            
-        } catch (error) {
-            console.error('Voice command processing failed:', error);
-            this.showMessage('Sorry, I couldn\\'t process that request', 'error');
-            this.speakText('Sorry, I encountered an error. Please try again.');
-        }
-    }
+        });
 
-    displayAIResponse(text) {
-        const responseElement = document.getElementById('aiResponse');
-        if (responseElement) {
-            responseElement.innerHTML = \
-                <div class=\"ai-response\">
-                    <div class=\"response-header\">
-                        <i class=\"fas fa-robot\"></i>
-                        <strong>Khensani AI</strong>
-                    </div>
-                    <div class=\"response-text\">\</div>
-                </div>
-            \;
-            responseElement.style.display = 'block';
-        }
-    }
-
-    async speakText(text, options = {}) {
-        if (this.isSpeaking) {
-            this.stopSpeaking();
-            await this.delay(100);
-        }
-
-        return new Promise((resolve, reject) => {
-            if (!text || typeof text !== 'string') {
-                reject(new Error('Invalid text for speech'));
-                return;
+        // Page visibility changes
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.stopListening();
+                this.stopSpeaking();
             }
-
-            this.synthesis = new SpeechSynthesisUtterance(text);
-            this.configureSpeech(this.synthesis, options);
-
-            this.synthesis.onstart = () => {
-                this.isSpeaking = true;
-                this.updateSpeakingUI(true);
-                console.log('Started speaking:', text);
-            };
-
-            this.synthesis.onend = () => {
-                this.isSpeaking = false;
-                this.updateSpeakingUI(false);
-                resolve();
-                console.log('Finished speaking');
-            };
-
-            this.synthesis.onerror = (event) => {
-                this.isSpeaking = false;
-                this.updateSpeakingUI(false);
-                reject(new Error(\Speech error: \\));
-                console.error('Speech error:', event);
-            };
-
-            speechSynthesis.speak(this.synthesis);
         });
     }
 
-    configureSpeech(utterance, options) {
-        const voiceIndex = parseInt(options.voiceIndex) || 
-                          document.getElementById('voiceSelect')?.value || 0;
-        const voice = this.supportedVoices[voiceIndex];
+    updateVoiceUI(state) {
+        const voiceBtn = document.getElementById('voiceToggle');
+        if (!voiceBtn) return;
+
+        const states = {
+            ready: { emoji: '🎤', text: 'Start Voice', class: 'voice-ready' },
+            listening: { emoji: '🔴', text: 'Listening...', class: 'voice-listening' },
+            speaking: { emoji: '🔵', text: 'Speaking...', class: 'voice-speaking' },
+            error: { emoji: '❌', text: 'Voice Error', class: 'voice-error' },
+            active: { emoji: '🎤', text: 'Stop Voice', class: 'voice-active' }
+        };
+
+        const config = states[state] || states.ready;
         
-        if (voice) {
-            utterance.voice = voice;
-            utterance.lang = voice.lang;
+        voiceBtn.innerHTML = `${config.emoji} ${config.text}`;
+        voiceBtn.className = `voice-btn ${config.class}`;
+    }
+
+    showVoiceStatus(status, message = '') {
+        const statusElement = document.getElementById('voiceStatus');
+        const messageElement = document.getElementById('voiceMessage');
+        
+        if (statusElement) {
+            statusElement.textContent = this.getVoiceStatusText(status);
+            statusElement.className = `voice-status status-${status}`;
+        }
+        
+        if (messageElement && message) {
+            messageElement.textContent = message;
+        }
+    }
+
+    updateTranscriptDisplay(final, interim) {
+        const transcriptElement = document.getElementById('voiceTranscript');
+        if (transcriptElement) {
+            let html = '';
+            if (final) {
+                html += `<div class="final-transcript">${final}</div>`;
+            }
+            if (interim) {
+                html += `<div class="interim-transcript">${interim}</div>`;
+            }
+            transcriptElement.innerHTML = html;
+        }
+    }
+
+    showCommandFeedback(transcript, handled) {
+        const feedbackElement = document.getElementById('voiceFeedback') || this.createFeedbackElement();
+        
+        feedbackElement.innerHTML = `
+            <div class="command-feedback ${handled ? 'command-success' : 'command-general'}">
+                <span class="feedback-icon">${handled ? '✅' : '💭'}</span>
+                <span class="feedback-text">"${transcript}"</span>
+                <span class="feedback-type">${handled ? 'Command' : 'Question'}</span>
+            </div>
+        `;
+        
+        // Auto-remove after 3 seconds
+        setTimeout(() => {
+            if (feedbackElement.parentElement) {
+                feedbackElement.remove();
+            }
+        }, 3000);
+    }
+
+    createFeedbackElement() {
+        const element = document.createElement('div');
+        element.id = 'voiceFeedback';
+        document.body.appendChild(element);
+        return element;
+    }
+
+    // ==================== UTILITIES ====================
+
+    checkBrowserSupport() {
+        const supportsRecognition = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+        const supportsSynthesis = 'speechSynthesis' in window;
+        
+        if (!supportsRecognition && !supportsSynthesis) {
+            this.showVoiceStatus('unsupported', 'Voice features not available in this browser');
+            return false;
+        }
+        
+        if (!supportsRecognition) {
+            console.warn('⚠️ Speech recognition not supported');
+        }
+        
+        if (!supportsSynthesis) {
+            console.warn('⚠️ Speech synthesis not supported');
+        }
+        
+        return true;
+    }
+
+    getVoiceStatusText(status) {
+        const statusMap = {
+            ready: 'Ready',
+            listening: 'Listening...',
+            speaking: 'Speaking...',
+            processing: 'Processing...',
+            error: 'Error',
+            unsupported: 'Not Supported'
+        };
+        return statusMap[status] || 'Unknown';
+    }
+
+    getFallbackResponse(transcript) {
+        const fallbacks = [
+            "I heard you say something about learning. That's great!",
+            "Voice commands are being enhanced. Try typing your question for now.",
+            "I'm still learning to understand all voice commands. Please try the chat interface.",
+            "That's an interesting question! The full voice system will be available soon."
+        ];
+        
+        return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+    }
+
+    getCurrentUserId() {
+        const user = JSON.parse(localStorage.getItem('mindflow_user') || '{}');
+        return user.id || 'voice_user';
+    }
+
+    // ==================== COMMAND HANDLERS (CONTINUED) ====================
+
+    async handleBackCommand() {
+        await this.speak("Going back to previous page");
+        window.history.back();
+    }
+
+    async handleUndoCommand() {
+        if (typeof window.chessEngine !== 'undefined') {
+            window.chessEngine.undoMove();
+            await this.speak("Undid the last move");
         } else {
-            utterance.lang = this.currentLanguage;
-        }
-
-        utterance.rate = options.rate || 0.9;
-        utterance.pitch = options.pitch || 1.0;
-        utterance.volume = options.volume || 1.0;
-    }
-
-    async speakAudio(audioData) {
-        // Implementation for playing pre-generated audio
-        // This would handle audio data from the backend
-        console.log('Playing pre-generated audio');
-        
-        // For now, fall back to text-to-speech
-        if (audioData.fallbackText) {
-            await this.speakText(audioData.fallbackText);
+            await this.speak("No game active to undo");
         }
     }
 
-    stopSpeaking() {
-        if (this.isSpeaking && speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            this.isSpeaking = false;
-            this.updateSpeakingUI(false);
-        }
-    }
-
-    updateSpeakingUI(speaking) {
-        const speakBtn = document.getElementById('speakText');
-        const speakingIndicator = document.getElementById('speakingIndicator');
-        
-        if (speakBtn) {
-            speakBtn.disabled = speaking;
-            speakBtn.innerHTML = speaking ? 
-                '<i class=\"fas fa-stop\"></i> Stop' : 
-                '<i class=\"fas fa-play\"></i> Speak';
-        }
-        
-        if (speakingIndicator) {
-            speakingIndicator.style.display = speaking ? 'block' : 'none';
-        }
-    }
-
-    setLanguage(languageCode) {
-        this.currentLanguage = languageCode;
-        this.showMessage(\Language set to: \\, 'success');
-        
-        // Update UI if available
-        const languageSelect = document.getElementById('voiceLanguage');
-        if (languageSelect) {
-            languageSelect.value = languageCode;
-        }
-    }
-
-    setVoice(voiceIndex) {
-        const voice = this.supportedVoices[voiceIndex];
-        if (voice) {
-            this.showMessage(\Voice set to: \\, 'success');
-        }
-    }
-
-    showSuggestions(suggestions) {
-        const suggestionsElement = document.getElementById('voiceSuggestions');
-        if (!suggestionsElement) return;
-
-        suggestionsElement.innerHTML = suggestions.map(suggestion => \
-            <button class=\"suggestion-btn\" onclick=\"window.voiceAI.useSuggestion('\')\">
-                \
-            </button>
-        \).join('');
-        
-        suggestionsElement.style.display = 'block';
-    }
-
-    useSuggestion(suggestion) {
-        const inputElement = document.getElementById('speechInput');
-        if (inputElement) {
-            inputElement.value = suggestion;
-        }
-        
-        this.processVoiceCommand(suggestion);
-    }
-
-    showMessage(message, type = 'info') {
-        if (window.mindFlowApp) {
-            window.mindFlowApp.showNotification(message, type);
+    async handleNewGameCommand() {
+        if (typeof window.chessEngine !== 'undefined') {
+            window.chessEngine.newGame();
+            await this.speak("Started a new chess game");
         } else {
-            console.log(\[\] \\);
+            await this.speak("Please open the chess game first");
         }
     }
 
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // Utility method to check if voice features are available
-    isVoiceSupported() {
-        return this.checkBrowserSupport();
-    }
-
-    // Get available languages
-    getAvailableLanguages() {
-        const languages = new Set();
-        this.supportedVoices.forEach(voice => {
-            languages.add(voice.lang);
-        });
-        return Array.from(languages).sort();
-    }
-
-    // Cleanup method
-    destroy() {
+    async handleStopCommand() {
         this.stopListening();
         this.stopSpeaking();
-        console.log('Voice AI Engine Destroyed');
+        await this.speak("Stopped all voice activities");
+    }
+
+    async handleRepeatCommand() {
+        if (this.transcript) {
+            await this.speak(`You said: ${this.transcript}`);
+        } else {
+            await this.speak("Nothing to repeat yet");
+        }
     }
 }
 
-// Initialize voice AI when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+// ==================== GLOBAL VOICE INSTANCE ====================
+
+document.addEventListener('DOMContentLoaded', function() {
     window.voiceAI = new VoiceAI();
 });
+
+// Global voice functions
+window.startVoiceListening = function() {
+    window.voiceAI?.startListening();
+};
+
+window.stopVoiceListening = function() {
+    window.voiceAI?.stopListening();
+};
+
+window.toggleVoiceListening = function() {
+    window.voiceAI?.toggleListening();
+};
+
+window.speakText = function(text, options) {
+    return window.voiceAI?.speak(text, options);
+};

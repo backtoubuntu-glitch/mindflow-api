@@ -1,490 +1,364 @@
-﻿class ChessGameEngine {
+﻿// MindFlow AI - Educational Chess Engine (Production)
+// ===================================================
+
+class EducationalChess {
     constructor() {
-        this.chess = new Chess();
+        this.API_BASE = 'https://mindflow-ai.onrender.com/api';
+        this.game = null;
         this.board = null;
-        this.gameStatus = 'idle';
-        this.difficulty = 'beginner';
-        this.currentObjective = 'control_center';
-        this.moveHistory = [];
-        this.aiThinking = false;
-        this.isInitialized = false;
-        
+        this.currentGameId = null;
+        this.isPlayerTurn = true;
         this.init();
     }
 
     init() {
-        if (this.isInitialized) return;
+        console.log('♟️ Educational Chess Initialized');
+        this.initializeChessBoard();
+        this.setupEventListeners();
+        this.loadExistingGame();
+    }
+
+    // ==================== CHESS BOARD SETUP ====================
+
+    initializeChessBoard() {
+        const config = {
+            draggable: true,
+            position: 'start',
+            onDragStart: this.onDragStart.bind(this),
+            onDrop: this.onDrop.bind(this),
+            onSnapEnd: this.onSnapEnd.bind(this),
+            orientation: 'white', // Student always plays as white
+            pieceTheme: '/assets/images/chesspieces/{piece}.png'
+        };
+
+        this.board = Chessboard('chessBoard', config);
+        this.game = new Chess();
         
-        this.bindEvents();
-        this.initBoard();
-        this.updateStatus();
-        this.isInitialized = true;
-        
-        console.log('Chess Engine Initialized');
+        this.updateGameStatus();
     }
 
-    initBoard() {
-        try {
-            const config = {
-                draggable: true,
-                position: 'start',
-                onDragStart: this.onDragStart.bind(this),
-                onDrop: this.onDrop.bind(this),
-                onSnapEnd: this.onSnapEnd.bind(this),
-                orientation: 'white',
-                pieceTheme: '/assets/images/chesspieces/{piece}.png',
-                showNotation: true
-            };
-
-            this.board = Chessboard('chessboard', config);
-            console.log('Chessboard initialized');
-        } catch (error) {
-            console.error('Chessboard initialization failed:', error);
-        }
-    }
-
-    bindEvents() {
-        this.safeAddEventListener('startGame', 'click', () => this.startGame());
-        this.safeAddEventListener('resetGame', 'click', () => this.resetGame());
-        this.safeAddEventListener('hintButton', 'click', () => this.getHint());
-        this.safeAddEventListener('analyzeButton', 'click', () => this.analyzeGame());
-
-        document.querySelectorAll('.difficulty-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.setDifficulty(e.target.dataset.level);
-            });
-        });
-    }
-
-    safeAddEventListener(elementId, event, handler) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.addEventListener(event, handler);
-        }
-    }
+    // ==================== GAME LOGIC ====================
 
     onDragStart(source, piece, position, orientation) {
-        if (this.gameStatus !== 'playing' || 
-            this.chess.turn() !== 'w' || 
-            this.aiThinking ||
-            piece.startsWith('b')) {
-            return false;
-        }
+        // Do not pick up pieces if it's AI's turn or game is over
+        if (!this.isPlayerTurn) return false;
+        
+        // Only allow valid moves
+        if (this.game.game_over()) return false;
+        
+        // Student always plays as white
+        if (piece.search(/^b/) !== -1) return false;
+        
         return true;
     }
 
     async onDrop(source, target) {
         try {
-            const move = this.chess.move({
+            // Attempt the move locally first
+            const move = this.game.move({
                 from: source,
                 to: target,
-                promotion: 'q'
+                promotion: 'q' // Always promote to queen for simplicity
             });
 
-            if (move === null) {
-                this.showMessage('Invalid move! Try again.');
-                return 'snapback';
-            }
+            // If illegal move, snap back
+            if (move === null) return 'snapback';
 
-            this.recordMove(move, 'player');
-            this.updateGameDisplay();
-
-            if (this.chess.isGameOver()) {
+            // Update board position
+            this.board.position(this.game.fen());
+            
+            // Check for game end
+            if (this.game.game_over()) {
                 this.handleGameEnd();
                 return;
             }
 
-            await this.makeAIMove();
+            // Switch to AI turn
+            this.isPlayerTurn = false;
+            this.updateGameStatus('Thinking...');
+            
+            // Send move to AI backend
+            await this.submitMoveToAI(source, target);
 
         } catch (error) {
-            console.error('Move execution error:', error);
-            this.showMessage('Move error occurred');
+            console.error('❌ Move error:', error);
             return 'snapback';
         }
     }
 
     onSnapEnd() {
-        this.board.position(this.chess.fen());
+        this.board.position(this.game.fen());
     }
 
-    async makeAIMove() {
-        this.aiThinking = true;
-        this.showThinkingIndicator();
+    // ==================== AI INTEGRATION ====================
 
+    async submitMoveToAI(from, to) {
         try {
-            const response = await fetch('/api/ai/chess/move', {
+            console.log('🤖 Sending move to AI...');
+            
+            const response = await fetch(`${this.API_BASE}/ai/chess/move`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': \Bearer \\
                 },
                 body: JSON.stringify({
-                    fen: this.chess.fen(),
-                    difficulty: this.difficulty,
-                    objective: this.currentObjective,
-                    moveHistory: this.moveHistory
+                    gameId: this.currentGameId,
+                    move: `${from}${to}`,
+                    currentFen: this.game.fen()
                 })
             });
 
             if (!response.ok) {
-                throw new Error(\API error: \\);
+                throw new Error(`AI move failed: ${response.status}`);
             }
 
-            const result = await response.json();
-
-            if (result.success && result.data) {
-                const aiMove = this.chess.move(result.data.move);
-                if (aiMove) {
-                    this.recordMove(aiMove, 'ai');
-                    this.showEducationalFeedback(result.data);
-                    this.updateGameDisplay();
-
-                    if (this.chess.isGameOver()) {
-                        this.handleGameEnd();
-                    }
-                } else {
-                    throw new Error('Invalid AI move received');
-                }
+            const data = await response.json();
+            
+            if (data.success && data.move) {
+                this.handleAIMove(data);
             } else {
-                throw new Error(result.message || 'AI move failed');
+                throw new Error('Invalid AI response');
             }
 
         } catch (error) {
-            console.error('AI move failed:', error);
-            this.makeFallbackMove();
-        } finally {
-            this.aiThinking = false;
-            this.hideThinkingIndicator();
+            console.error('❌ AI move error:', error);
+            this.handleAIFallback();
         }
     }
 
-    makeFallbackMove() {
-        const moves = this.chess.moves({ verbose: true });
-        if (moves.length === 0) return;
-
-        const ratedMoves = moves.map(move => {
-            let score = 0;
-            
-            if (move.captured) {
-                score += this.getPieceValue(move.captured);
-            }
-            
-            if (move.san.includes('+')) {
-                score += 1;
-            }
-            
-            if (move.promotion) {
-                score += 8;
-            }
-            
-            return { move, score };
-        });
-
-        ratedMoves.sort((a, b) => b.score - a.score);
-        const bestMove = ratedMoves[0].move;
+    handleAIMove(aiData) {
+        // Make AI move on the board
+        const move = this.game.move(aiData.move);
         
-        this.chess.move(bestMove);
-        this.recordMove(bestMove, 'ai');
-        this.updateGameDisplay();
-
-        if (this.chess.isGameOver()) {
-            this.handleGameEnd();
-        }
-    }
-
-    getPieceValue(piece) {
-        const values = {
-            'p': 1, 'n': 3, 'b': 3, 'r': 5, 'q': 9, 'k': 0
-        };
-        return values[piece] || 0;
-    }
-
-    recordMove(move, player) {
-        const moveRecord = {
-            san: move.san,
-            from: move.from,
-            to: move.to,
-            player: player,
-            fen: this.chess.fen(),
-            timestamp: new Date().toISOString(),
-            piece: move.piece,
-            captured: move.captured
-        };
-
-        this.moveHistory.push(moveRecord);
-        this.updateMoveList();
-    }
-
-    updateGameDisplay() {
-        this.board.position(this.chess.fen());
-        this.updateStatus();
-        this.highlightLastMove();
-        this.updateMoveCount();
-    }
-
-    updateStatus() {
-        const statusElement = document.getElementById('gameStatus');
-        if (!statusElement) return;
-
-        let statusText = '';
-
-        if (this.chess.isCheckmate()) {
-            const winner = this.chess.turn() === 'w' ? 'Black' : 'White';
-            statusText = \Checkmate! \ wins!\;
-            this.gameStatus = 'finished';
-        } else if (this.chess.isDraw()) {
-            statusText = 'Game drawn';
-            this.gameStatus = 'finished';
-        } else if (this.chess.isCheck()) {
-            statusText = 'Check!';
-            this.gameStatus = 'playing';
-        } else if (this.aiThinking) {
-            statusText = 'Khensani AI is thinking...';
-        } else {
-            const turn = this.chess.turn() === 'w' ? 'Your' : 'AI\\'s';
-            statusText = \\ turn\;
-            this.gameStatus = 'playing';
-        }
-
-        statusElement.textContent = statusText;
-    }
-
-    updateMoveList() {
-        const moveList = document.getElementById('moveList');
-        if (!moveList) return;
-
-        moveList.innerHTML = '';
-
-        this.moveHistory.forEach((record, index) => {
-            const moveElement = document.createElement('div');
-            moveElement.className = \move \\;
+        if (move) {
+            this.board.position(this.game.fen());
             
-            const moveNumber = Math.floor(index / 2) + 1;
-            const isWhiteMove = index % 2 === 0;
+            // Provide educational feedback
+            this.showEducationalTip(aiData.feedback);
             
-            if (isWhiteMove) {
-                moveElement.innerHTML = \
-                    <span class="move-number">\.</span>
-                    <span class="move-san">\</span>
-                \;
+            // Check for game end
+            if (this.game.game_over()) {
+                this.handleGameEnd();
             } else {
-                moveElement.innerHTML = \
-                    <span class="move-san">\</span>
-                \;
+                // Switch back to player turn
+                this.isPlayerTurn = true;
+                this.updateGameStatus('Your turn!');
             }
-
-            if (record.captured) {
-                moveElement.classList.add('capture');
-            }
-
-            moveList.appendChild(moveElement);
-        });
-
-        moveList.scrollTop = moveList.scrollHeight;
-    }
-
-    updateMoveCount() {
-        const moveCountElement = document.getElementById('moveCount');
-        if (moveCountElement) {
-            moveCountElement.textContent = \Moves: \\;
         }
     }
 
-    highlightLastMove() {
-        document.querySelectorAll('.highlight').forEach(el => {
-            el.classList.remove('highlight');
-        });
-
-        const lastMove = this.moveHistory[this.moveHistory.length - 1];
-        if (lastMove) {
-            const squares = [lastMove.from, lastMove.to];
-            squares.forEach(square => {
-                const squareElement = document.querySelector(\[data-square="\"]\);
-                if (squareElement) {
-                    squareElement.classList.add('highlight');
-                }
-            });
-        }
-    }
-
-    async getHint() {
-        if (this.gameStatus !== 'playing' || this.chess.turn() !== 'w') {
-            this.showMessage('Hint available only during your turn');
-            return;
-        }
-
-        try {
-            const response = await fetch('/api/ai/chess/hint', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': \Bearer \\
-                },
-                body: JSON.stringify({
-                    fen: this.chess.fen(),
-                    difficulty: this.difficulty,
-                    objective: this.currentObjective
-                })
-            });
-
-            const result = await response.json();
+    handleAIFallback() {
+        // Simple fallback AI when backend is unavailable
+        const moves = this.game.moves();
+        if (moves.length > 0) {
+            const randomMove = moves[Math.floor(Math.random() * moves.length)];
+            const move = this.game.move(randomMove);
             
-            if (result.success) {
-                this.showHint(result.data.hint);
+            this.board.position(this.game.fen());
+            this.showEducationalTip("I'm using a simple strategy while learning advanced patterns!");
+            
+            if (this.game.game_over()) {
+                this.handleGameEnd();
+            } else {
+                this.isPlayerTurn = true;
+                this.updateGameStatus('Your turn! (Fallback AI)');
             }
-        } catch (error) {
-            this.showMessage('Could not get hint');
         }
     }
 
-    showHint(hint) {
-        const hintElement = document.getElementById('hintDisplay');
-        if (hintElement) {
-            hintElement.innerHTML = \
-                <div class="hint-header">
-                    <i class="fas fa-lightbulb"></i>
-                    <strong>Khensani's Hint</strong>
-                </div>
-                <div class="hint-content">\</div>
-            \;
-            hintElement.style.display = 'block';
+    // ==================== EDUCATIONAL FEATURES ====================
 
+    showEducationalTip(tip) {
+        const tipElement = document.getElementById('chessTip');
+        if (tipElement) {
+            tipElement.innerHTML = `
+                <div class="educational-tip">
+                    <span class="tip-icon">💡</span>
+                    <span class="tip-text">${tip || 'Good move! Think about controlling the center.'}</span>
+                </div>
+            `;
+            
+            // Auto-hide after 8 seconds
             setTimeout(() => {
-                hintElement.style.display = 'none';
-            }, 15000);
+                tipElement.innerHTML = '';
+            }, 8000);
         }
     }
 
-    showEducationalFeedback(feedback) {
-        const feedbackElement = document.getElementById('educationalFeedback');
-        if (!feedbackElement) return;
+    showLearningObjective() {
+        const objectives = [
+            "Learning Goal: Understand piece development",
+            "Strategy Focus: Control the center squares",
+            "Tactical Theme: Look for forks and pins",
+            "Positional Idea: Improve your worst-placed piece"
+        ];
         
-        feedbackElement.innerHTML = \
-            <div class="feedback-header">
-                <i class="fas fa-robot"></i>
-                <strong>Khensani AI Analysis</strong>
-            </div>
-            <div class="feedback-content">
-                <div class="feedback-item">
-                    <label>My Move:</label>
-                    <span class="move-text">\</span>
-                </div>
-                <div class="feedback-item">
-                    <label>Strategy:</label>
-                    <span>\</span>
-                </div>
-                <div class="feedback-item">
-                    <label>Learning Focus:</label>
-                    <span class="objective">\</span>
-                </div>
-            </div>
-        \;
-
-        feedbackElement.style.display = 'block';
+        const randomObjective = objectives[Math.floor(Math.random() * objectives.length)];
+        this.showEducationalTip(randomObjective);
     }
 
-    startGame() {
-        this.resetGame();
-        this.gameStatus = 'playing';
-        this.updateStatus();
-        
-        const startBtn = document.getElementById('startGame');
-        if (startBtn) startBtn.disabled = true;
-
-        this.showMessage('Game started! You play as White.');
-    }
-
-    resetGame() {
-        this.chess.reset();
-        this.board.start();
-        this.moveHistory = [];
-        this.gameStatus = 'idle';
-        
-        this.updateStatus();
-        this.updateMoveList();
-        this.updateMoveCount();
-        
-        const startBtn = document.getElementById('startGame');
-        if (startBtn) startBtn.disabled = false;
-        
-        this.hideElement('educationalFeedback');
-        this.hideElement('hintDisplay');
-        
-        this.showMessage('Game reset - ready to play!');
-    }
-
-    hideElement(elementId) {
-        const element = document.getElementById(elementId);
-        if (element) element.style.display = 'none';
-    }
-
-    setDifficulty(level) {
-        this.difficulty = level;
-        
-        document.querySelectorAll('.difficulty-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.level === level);
-        });
-
-        const objectives = {
-            'beginner': 'control_center',
-            'intermediate': 'develop_pieces', 
-            'advanced': 'strategic_planning'
-        };
-        
-        this.currentObjective = objectives[level] || 'control_center';
-        this.showMessage(\Difficulty: \ | Focus: \\);
-    }
-
-    showThinkingIndicator() {
-        const indicator = document.getElementById('aiThinking');
-        if (indicator) {
-            indicator.style.display = 'flex';
-        }
-    }
-
-    hideThinkingIndicator() {
-        const indicator = document.getElementById('aiThinking');
-        if (indicator) {
-            indicator.style.display = 'none';
-        }
-    }
-
-    showMessage(message, duration = 3000) {
-        const existingMessages = document.querySelectorAll('.chess-toast');
-        existingMessages.forEach(msg => msg.remove());
-
-        const toast = document.createElement('div');
-        toast.className = 'chess-toast';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => toast.classList.add('show'), 10);
-
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => {
-                if (toast.parentNode) toast.remove();
-            }, 300);
-        }, duration);
-    }
-
-    getAuthToken() {
-        return localStorage.getItem('mindflow_token') || 'demo-token';
-    }
+    // ==================== GAME MANAGEMENT ====================
 
     handleGameEnd() {
-        this.gameStatus = 'finished';
-        this.updateStatus();
+        let message = '';
         
-        const startBtn = document.getElementById('startGame');
-        if (startBtn) startBtn.disabled = false;
+        if (this.game.in_checkmate()) {
+            message = this.game.turn() === 'w' ? 
+                'Checkmate! You won! 🎉' : 'Checkmate! AI wins. Learn from this!';
+        } else if (this.game.in_draw()) {
+            message = 'Game drawn! Well played!';
+        } else if (this.game.in_stalemate()) {
+            message = 'Stalemate! Interesting endgame.';
+        } else {
+            message = 'Game over!';
+        }
+
+        this.updateGameStatus(message);
+        this.showGameResult(message);
+        
+        // Disable further moves
+        this.isPlayerTurn = false;
     }
 
-    isReady() {
-        return this.isInitialized && this.board !== null;
+    showGameResult(message) {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'game-result-overlay';
+        resultDiv.innerHTML = `
+            <div class="game-result">
+                <h3>Game Complete</h3>
+                <p>${message}</p>
+                <div class="result-actions">
+                    <button onclick="window.chessEngine.newGame()" class="btn-primary">New Game</button>
+                    <button onclick="window.chessEngine.analyzeGame()" class="btn-secondary">Analyze</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(resultDiv);
+    }
+
+    updateGameStatus(status = '') {
+        const statusElement = document.getElementById('gameStatus');
+        if (statusElement) {
+            const turnIndicator = this.isPlayerTurn ? 'Your turn (White)' : 'AI thinking (Black)';
+            statusElement.textContent = status || turnIndicator;
+        }
+    }
+
+    // ==================== GAME CONTROLS ====================
+
+    newGame() {
+        this.game = new Chess();
+        this.board.start();
+        this.isPlayerTurn = true;
+        this.currentGameId = 'game_' + Date.now();
+        
+        this.updateGameStatus('New game started! Your turn.');
+        
+        // Remove any result overlays
+        const existingResult = document.querySelector('.game-result-overlay');
+        if (existingResult) existingResult.remove();
+        
+        // Show learning objective
+        setTimeout(() => this.showLearningObjective(), 1000);
+    }
+
+    undoMove() {
+        this.game.undo();
+        this.game.undo(); // Undo both player and AI moves
+        this.board.position(this.game.fen());
+        this.isPlayerTurn = true;
+        this.updateGameStatus('Move undone. Your turn again.');
+    }
+
+    analyzeGame() {
+        const analysis = {
+            fen: this.game.fen(),
+            moves: this.game.history(),
+            evaluation: this.analyzePosition(),
+            suggestions: this.getLearningSuggestions()
+        };
+        
+        this.showAnalysis(analysis);
+    }
+
+    analyzePosition() {
+        // Simple position analysis
+        const material = this.calculateMaterial();
+        const centerControl = this.assessCenterControl();
+        const development = this.assessDevelopment();
+        
+        return {
+            materialBalance: material,
+            centerControl: centerControl,
+            pieceDevelopment: development,
+            overall: material > 0 ? 'Advantage: White' : 'Advantage: Black'
+        };
+    }
+
+    calculateMaterial() {
+        // Simple material count
+        let white = 0, black = 0;
+        const values = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 0 };
+        
+        this.game.board().forEach(row => {
+            row.forEach(piece => {
+                if (piece) {
+                    if (piece.color === 'w') white += values[piece.type];
+                    else black += values[piece.type];
+                }
+            });
+        });
+        
+        return white - black;
+    }
+
+    // ==================== UTILITIES ====================
+
+    loadExistingGame() {
+        const savedGame = localStorage.getItem('mindflow_chess_game');
+        if (savedGame) {
+            try {
+                const gameData = JSON.parse(savedGame);
+                this.game.load_pgn(gameData.pgn);
+                this.board.position(this.game.fen());
+                this.currentGameId = gameData.gameId;
+                console.log('✅ Loaded existing game');
+            } catch (error) {
+                console.error('❌ Failed to load game:', error);
+                this.newGame();
+            }
+        } else {
+            this.newGame();
+        }
+    }
+
+    saveGame() {
+        const gameData = {
+            pgn: this.game.pgn(),
+            gameId: this.currentGameId,
+            timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem('mindflow_chess_game', JSON.stringify(gameData));
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.chessGame = new ChessGameEngine();
+// ==================== GLOBAL CHESS INSTANCE ====================
+
+document.addEventListener('DOMContentLoaded', function() {
+    window.chessEngine = new EducationalChess();
 });
+
+// Global control functions
+window.newChessGame = function() {
+    window.chessEngine?.newGame();
+};
+
+window.undoChessMove = function() {
+    window.chessEngine?.undoMove();
+};
+
+window.analyzeChessGame = function() {
+    window.chessEngine?.analyzeGame();
+};
