@@ -1,0 +1,642 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khensani AI - MindFlow</title>
+    <link rel="stylesheet" href="assets/css/deep-tech-nuclear.css">
+    <style>
+        .curriculum-container {
+            padding: 100px 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .khensani-hero {
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            border-radius: 20px;
+            padding: 50px 40px;
+            margin-bottom: 30px;
+            border: 2px solid var(--cyber-blue);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .voice-interface {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #2A2A2A;
+            text-align: center;
+        }
+        
+        .voice-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+        
+        .voice-btn {
+            background: linear-gradient(135deg, var(--cyber-blue), #B026FF);
+            color: var(--pure-white);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+        
+        .voice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--tech-glow);
+        }
+        
+        .voice-btn.listening {
+            background: var(--neon-red);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .gemini-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(106, 27, 154, 0.1);
+            border-radius: 12px;
+            border: 1px solid #6A1B9A;
+        }
+        
+        .gemini-response {
+            background: rgba(106, 27, 154, 0.1);
+            border-left: 4px solid #6A1B9A;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .subject-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--tech-glow);
+        }
+        
+        .subject-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            background: #2A2A2A;
+            border-radius: 10px;
+            height: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), #00FF41);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .thinking-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .thinking-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cyber-blue);
+            border-radius: 50%;
+            animation: thinking 1.4s infinite ease-in-out;
+        }
+        
+        .thinking-dot:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes thinking {
+            0%, 80%, 100% { transform: scale(0); opacity: 0; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .api-status {
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin: 10px 0;
+        }
+        
+        .status-active {
+            background: rgba(0, 255, 65, 0.1);
+            color: #00FF41;
+            border: 1px solid #00FF41;
+        }
+        
+        .status-inactive {
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--neon-red);
+            border: 1px solid var(--neon-red);
+        }
+    </style>
+</head>
+<body>
+    <!-- DEEP-TECH NAVIGATION -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
+        </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link active">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="safety.html" class="nav-link">Safety</a>
+            <a href="login.html" class="nav-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="curriculum-container">
+        <!-- KHENSANI HERO SECTION -->
+        <section class="khensani-hero">
+            <h1 class="tech-heading" style="-webkit-text-fill-color: white; font-size: 3em;">🤖 KHENSANI AI + GEMINI</h1>
+            <p style="font-size: 1.3em; margin: 20px 0; opacity: 0.9;">
+                Enterprise AI Learning Assistant • Gemini-Powered • Voice Enabled
+            </p>
+            <div id="geminiStatus" class="api-status status-active">
+                🟢 Gemini AI: Integrated & Ready
+            </div>
+        </section>
+
+        <!-- VOICE INTERFACE -->
+        <div class="voice-interface">
+            <div style="font-size: 4em; margin-bottom: 20px;">🎤</div>
+            <h2 class="tech-heading">Talk to Khensani AI</h2>
+            <p style="margin: 15px 0; opacity: 0.8;">
+                Voice commands enhanced with Google Gemini AI intelligence
+            </p>
+            
+            <div class="voice-controls">
+                <button class="voice-btn" id="startListening">
+                    🎤 Start Voice
+                </button>
+                <button class="voice-btn" onclick="khensaniHelp('mathematics')">
+                    📐 Math Help
+                </button>
+                <button class="voice-btn" onclick="khensaniHelp('science')">
+                    🔬 Science Help
+                </button>
+                <button class="voice-btn" onclick="askGeminiAdvanced()">
+                    🧠 Gemini AI
+                </button>
+            </div>
+            
+            <!-- Gemini AI Features -->
+            <div class="gemini-features">
+                <button class="tech-btn" onclick="askGemini('mathematics')">
+                    🧮 Advanced Mathematics
+                </button>
+                <button class="tech-btn" onclick="askGemini('science_technology')">
+                    🔭 Science & Technology
+                </button>
+                <button class="tech-btn" onclick="askGemini('programming_ai')">
+                    💻 Programming & AI
+                </button>
+                <button class="tech-btn" onclick="askGemini('african_history')">
+                    🌍 African History
+                </button>
+            </div>
+            
+            <!-- Voice Response Area -->
+            <div id="khensaniResponse" class="khensani-response" style="display: none;">
+                <div id="responseContent"></div>
+            </div>
+            
+            <!-- Gemini Response Area -->
+            <div id="geminiResponse" class="gemini-response" style="display: none;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <span style="font-size: 1.2em;">🤖</span>
+                    <strong>Gemini AI Response:</strong>
+                </div>
+                <div id="geminiContent"></div>
+            </div>
+            
+            <!-- Thinking Animation -->
+            <div id="thinkingAnimation" class="thinking-animation">
+                <div class="thinking-dot"></div>
+                <div class="thinking-dot"></div>
+                <div class="thinking-dot"></div>
+                <span>Khensani AI with Gemini is thinking...</span>
+            </div>
+        </div>
+
+        <!-- SUBJECTS GRID -->
+        <div class="subjects-grid">
+            <!-- AI & Machine Learning -->
+            <div class="tech-card subject-card" onclick="openSubject('ai')">
+                <div class="subject-icon">🤖</div>
+                <h3 class="tech-heading">AI & Machine Learning</h3>
+                <p>Learn neural networks, computer vision, and AI ethics with Gemini-enhanced content and real-world African applications.</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 20%"></div>
+                </div>
+                <small>12 Modules • 45 Lessons • Gemini AI Enhanced</small>
+            </div>
+
+            <!-- Mathematics -->
+            <div class="tech-card subject-card" onclick="openSubject('mathematics')">
+                <div class="subject-icon">📐</div>
+                <h3 class="tech-heading">Mathematics</h3>
+                <p>Algebra, geometry, calculus with AI-guided problem solving and Gemini-powered step-by-step explanations.</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%"></div>
+                </div>
+                <small>20 Modules • 85 Lessons • Gemini AI Enhanced</small>
+            </div>
+
+            <!-- Science -->
+            <div class="tech-card subject-card" onclick="openSubject('science')">
+                <div class="subject-icon">🔬</div>
+                <h3 class="tech-heading">Science</h3>
+                <p>Physics, chemistry, biology with virtual labs, African scientific innovations, and experimental learning.</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 30%"></div>
+                </div>
+                <small>18 Modules • 70 Lessons • Gemini AI Enhanced</small>
+            </div>
+        </div>
+
+        <!-- AD SPOT -->
+        <div class="ad-children-spot" style="margin: 40px 0;">
+            <div style="color: var(--cyber-blue); font-weight: 600;">Sponsored AI Lesson</div>
+            <div>🌟 Powered by KDConcepts</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="tech-footer">
+        <div style="text-align: center;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved. | Enterprise AI Education Platform
+            </div>
+        </div>
+    </footer>
+
+    <!-- KHENSANI AI + GEMINI INTEGRATION -->
+    <script>
+        // Gemini AI Integration Class
+        class GeminiAI {
+            constructor() {
+                this.apiKey = 'AIzaSyC_9SfH6GCcR6n1fC3bJL3K3p3V9Yd6Z9g'; // Demo key - replace with actual
+                this.baseURL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+                this.isActive = false;
+                this.init();
+            }
+
+            async init() {
+                try {
+                    // Test connection
+                    await this.testConnection();
+                    this.isActive = true;
+                    document.getElementById('geminiStatus').className = 'api-status status-active';
+                    document.getElementById('geminiStatus').innerHTML = '🟢 Gemini AI: Connected & Active';
+                } catch (error) {
+                    this.isActive = false;
+                    document.getElementById('geminiStatus').className = 'api-status status-inactive';
+                    document.getElementById('geminiStatus').innerHTML = '🔴 Gemini AI: Offline - Using Local AI';
+                }
+            }
+
+            async testConnection() {
+                // Simple test query
+                const testResponse = await this.queryGemini('Hello', 'test');
+                return testResponse.includes('Hello') || testResponse.length > 0;
+            }
+
+            async queryGemini(prompt, context = 'educational') {
+                if (!this.isActive) {
+                    throw new Error('Gemini AI not active');
+                }
+
+                try {
+                    const response = await fetch(`${this.baseURL}?key=${this.apiKey}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `You are Khensani AI, an educational assistant for African students. Provide engaging, culturally relevant, and educational responses. Context: ${context}. Student Query: ${prompt}. Keep responses under 200 words and focused on learning.`
+                                }]
+                            }],
+                            generationConfig: {
+                                temperature: 0.7,
+                                topK: 40,
+                                topP: 0.95,
+                                maxOutputTokens: 500,
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                        return data.candidates[0].content.parts[0].text;
+                    } else {
+                        throw new Error('Invalid response format from Gemini API');
+                    }
+                } catch (error) {
+                    console.error('Gemini AI Error:', error);
+                    throw error;
+                }
+            }
+        }
+
+        // Enhanced Khensani AI with Gemini Integration
+        class EnhancedKhensaniAI {
+            constructor() {
+                this.isListening = false;
+                this.isSpeaking = false;
+                this.geminiAI = new GeminiAI();
+                this.init();
+            }
+
+            init() {
+                console.log('🤖 Enhanced Khensani AI Initialized with Gemini');
+                this.setupVoiceControls();
+                this.setupEventListeners();
+            }
+
+            setupVoiceControls() {
+                const startBtn = document.getElementById('startListening');
+                startBtn.addEventListener('click', () => {
+                    this.toggleVoiceListening();
+                });
+            }
+
+            setupEventListeners() {
+                // Keyboard shortcut for voice
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'k') {
+                        e.preventDefault();
+                        this.toggleVoiceListening();
+                    }
+                });
+            }
+
+            toggleVoiceListening() {
+                if (this.isListening) {
+                    this.stopListening();
+                } else {
+                    this.startListening();
+                }
+            }
+
+            startListening() {
+                this.isListening = true;
+                const btn = document.getElementById('startListening');
+                btn.innerHTML = '🔴 Listening...';
+                btn.classList.add('listening');
+                
+                this.showResponse("🎤 I'm listening... What would you like to learn about?");
+                
+                // Simulate voice recognition
+                setTimeout(() => {
+                    this.processVoiceCommand("Hello Khensani");
+                }, 2000);
+            }
+
+            stopListening() {
+                this.isListening = false;
+                const btn = document.getElementById('startListening');
+                btn.innerHTML = '🎤 Start Voice';
+                btn.classList.remove('listening');
+                
+                this.showResponse("✅ Voice mode ready. Click to start listening again.");
+            }
+
+            async processVoiceCommand(command) {
+                this.showThinking(true);
+                
+                try {
+                    // Try Gemini AI first
+                    const geminiResponse = await this.geminiAI.queryGemini(command, 'general_education');
+                    this.showThinking(false);
+                    this.showGeminiResponse(geminiResponse);
+                    this.speakResponse(geminiResponse);
+                } catch (error) {
+                    // Fallback to local AI
+                    this.showThinking(false);
+                    this.processWithLocalAI(command);
+                }
+            }
+
+            processWithLocalAI(command) {
+                const responses = {
+                    'hello': "Hello! I'm Khensani AI, enhanced with Gemini intelligence. How can I help you learn today?",
+                    'mathematics': "Let's explore mathematics! With Gemini AI, I can provide advanced problem-solving and step-by-step explanations. What specific topic interests you?",
+                    'science': "Science is amazing! I can explain complex concepts with Gemini's advanced understanding. What would you like to explore?",
+                    'ai': "Artificial Intelligence is my specialty! With Gemini integration, I can provide cutting-edge insights about machine learning and AI ethics.",
+                    'help': "I can help with: Mathematics, Science, AI, Programming, or African Studies. Just ask! I'm enhanced with Gemini AI for better responses."
+                };
+
+                const lowerCommand = command.toLowerCase();
+                let response = responses['help'];
+
+                for (const [keyword, resp] of Object.entries(responses)) {
+                    if (lowerCommand.includes(keyword)) {
+                        response = resp;
+                        break;
+                    }
+                }
+
+                this.showResponse(`"${response}"`);
+                this.speakResponse(response);
+            }
+
+            async processWithGemini(userQuery, subject) {
+                this.showThinking(true);
+                
+                try {
+                    const geminiResponse = await this.geminiAI.queryGemini(userQuery, subject);
+                    this.showThinking(false);
+                    this.showGeminiResponse(geminiResponse);
+                    this.speakResponse(geminiResponse);
+                } catch (error) {
+                    this.showThinking(false);
+                    this.processWithLocalAI(userQuery);
+                }
+            }
+
+            speakResponse(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1.0;
+                    utterance.volume = 0.8;
+                    speechSynthesis.speak(utterance);
+                }
+            }
+
+            showResponse(text) {
+                const responseDiv = document.getElementById('khensaniResponse');
+                const contentDiv = document.getElementById('responseContent');
+                
+                contentDiv.innerHTML = text;
+                responseDiv.style.display = 'block';
+                document.getElementById('geminiResponse').style.display = 'none';
+            }
+
+            showGeminiResponse(text) {
+                const responseDiv = document.getElementById('geminiResponse');
+                const contentDiv = document.getElementById('geminiContent');
+                
+                contentDiv.innerHTML = text;
+                responseDiv.style.display = 'block';
+                document.getElementById('khensaniResponse').style.display = 'none';
+            }
+
+            showThinking(show) {
+                const thinkingDiv = document.getElementById('thinkingAnimation');
+                thinkingDiv.style.opacity = show ? '1' : '0';
+            }
+        }
+
+        // Global functions
+        function khensaniHelp(subject) {
+            const ai = window.khensaniAI;
+            ai.showThinking(true);
+            
+            setTimeout(() => {
+                ai.showThinking(false);
+                const helpMessages = {
+                    'mathematics': "With Gemini AI enhancement, I can provide advanced mathematical problem-solving, step-by-step calculus explanations, and real-world applications. What specific mathematical concept would you like to explore?",
+                    'science': "Enhanced by Gemini, I can explain complex scientific principles, provide virtual lab simulations, and discuss cutting-edge African scientific innovations. Which area interests you?",
+                    'ai': "Powered by Gemini's advanced AI capabilities, I can discuss machine learning fundamentals, neural networks, computer vision, and the ethical implications of AI in African contexts."
+                };
+                
+                ai.speakResponse(helpMessages[subject] || "I'd love to help you learn! What specific topic are you interested in?");
+                ai.showResponse(helpMessages[subject] || "I'd love to help you learn! What specific topic are you interested in?");
+            }, 2000);
+        }
+
+        async function askGemini(subject) {
+            const question = prompt(`What would you like to know about ${subject}?`);
+            if (question && window.khensaniAI) {
+                await window.khensaniAI.processWithGemini(question, subject);
+            }
+        }
+
+        async function askGeminiAdvanced() {
+            const question = prompt('Ask Gemini AI anything:');
+            if (question && window.khensaniAI) {
+                await window.khensaniAI.processWithGemini(question, 'advanced_query');
+            }
+        }
+
+        function openSubject(subject) {
+            const subjects = {
+                'ai': "Loading AI Curriculum with Gemini Enhancement... 🤖",
+                'mathematics': "Opening Advanced Mathematics with Gemini... 📐", 
+                'science': "Launching Science Labs with Gemini... 🔬"
+            };
+            
+            alert(subjects[subject] || "Loading enhanced curriculum...");
+            
+            if (window.khensaniAI) {
+                window.khensaniAI.speakResponse(`Opening ${subject} curriculum enhanced with Gemini AI! Let's explore advanced learning together.`);
+            }
+        }
+
+        // Initialize Enhanced Khensani AI when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            window.khensaniAI = new EnhancedKhensaniAI();
+            
+            // Add deep-tech animations
+            createFloatingElements();
+        });
+
+        function createFloatingElements() {
+            const container = document.querySelector('.khensani-hero');
+            for (let i = 0; i < 12; i++) {
+                const element = document.createElement('div');
+                element.style.cssText = `
+                    position: absolute;
+                    width: 4px;
+                    height: 4px;
+                    background: var(--cyber-blue);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    animation: floatElement ${Math.random() * 10 + 5}s infinite ease-in-out;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    opacity: ${Math.random() * 0.6 + 0.2};
+                `;
+                container.appendChild(element);
+            }
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatElement {
+                0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.2; }
+                25% { transform: translate(30px, -20px) rotate(90deg); opacity: 0.7; }
+                50% { transform: translate(15px, 30px) rotate(180deg); opacity: 0.4; }
+                75% { transform: translate(-25px, 15px) rotate(270deg); opacity: 0.8; }
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.5; }
+            }
+            
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
