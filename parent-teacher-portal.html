@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent-Teacher Portal - MindFlow</title>
+    <link rel="stylesheet" href="assets/css/deep-tech-nuclear.css">
+    <style>
+        .portal-container {
+            padding: 100px 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .portal-hero {
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px solid var(--cyber-blue);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .communication-panel {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #2A2A2A;
+        }
+        
+        .message-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+        
+        .message-item {
+            padding: 20px;
+            border-bottom: 1px solid #2A2A2A;
+            transition: all 0.3s ease;
+        }
+        
+        .message-item:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        .message-item.unread {
+            border-left: 4px solid var(--cyber-blue);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .progress-section {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #2A2A2A;
+        }
+        
+        .progress-bar-container {
+            background: #2A2A2A;
+            border-radius: 10px;
+            height: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyber-blue), #00FF41);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        .meeting-schedule {
+            background: var(--card-surface);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid #2A2A2A;
+        }
+        
+        .schedule-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-bottom: 1px solid #2A2A2A;
+        }
+        
+        .schedule-item:last-child {
+            border-bottom: none;
+        }
+        
+        .schedule-time {
+            background: var(--cyber-blue);
+            color: var(--tech-black);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 700;
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .action-btn {
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--tech-glow);
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--cyber-blue);
+            border-radius: 50%;
+            animation: pulseRing 2s infinite;
+            opacity: 0;
+        }
+        
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- DEEP-TECH NAVIGATION -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
+        </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="safety.html" class="nav-link">Safety</a>
+            <a href="parent-teacher-portal.html" class="nav-link active">Portal</a>
+            <a href="login.html" class="nav-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="portal-container">
+        <!-- PORTAL HERO -->
+        <section class="portal-hero">
+            <h1 class="tech-heading" style="-webkit-text-fill-color: white; font-size: 2.5em;">👨‍👩‍👧‍👦 PARENT-TEACHER PORTAL</h1>
+            <p style="font-size: 1.2em; margin: 15px 0; opacity: 0.9;">
+                Seamless Collaboration • Real-Time Updates • Student Success
+            </p>
+        </section>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <div class="tech-card action-btn" onclick="sendMessage()">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">💬</div>
+                <h4>Send Message</h4>
+                <p>Contact teachers instantly</p>
+            </div>
+            <div class="tech-card action-btn" onclick="viewProgress()">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">📊</div>
+                <h4>View Progress</h4>
+                <p>Academic performance</p>
+            </div>
+            <div class="tech-card action-btn" onclick="scheduleMeeting()">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">📅</div>
+                <h4>Schedule Meeting</h4>
+                <p>Book parent-teacher conference</p>
+            </div>
+            <div class="tech-card action-btn" onclick="viewAttendance()">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">✅</div>
+                <h4>Attendance</h4>
+                <p>View student presence</p>
+            </div>
+        </div>
+
+        <!-- STUDENT OVERVIEW -->
+        <div class="portal-grid">
+            <div class="tech-card">
+                <div style="text-align: center;">
+                    <div style="font-size: 4em; margin-bottom: 15px;">👧</div>
+                    <h3 class="tech-heading">Lerato Dube</h3>
+                    <p>Grade 5 • Johannesburg Primary</p>
+                    <div style="margin: 20px 0;">
+                        <div style="color: var(--cyber-blue); font-weight: 600;">Overall Performance</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-fill" style="width: 78%"></div>
+                        </div>
+                        <div style="text-align: right; font-size: 0.9em; margin-top: 5px;">78%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card">
+                <h3 class="tech-heading">📚 Current Subjects</h3>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                        <span>Mathematics</span>
+                        <span style="color: var(--cyber-blue); font-weight: 600;">85%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" style="width: 85%"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                        <span>Science</span>
+                        <span style="color: var(--cyber-blue); font-weight: 600;">72%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" style="width: 72%"></div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                        <span>English</span>
+                        <span style="color: var(--cyber-blue); font-weight: 600;">90%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" style="width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tech-card">
+                <h3 class="tech-heading">🎯 Recent Achievements</h3>
+                <div style="margin-top: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 8px;">
+                        <span style="font-size: 1.5em;">🏆</span>
+                        <div>
+                            <strong>Math Whiz</strong>
+                            <div>Top 5% in algebra test</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 8px;">
+                        <span style="font-size: 1.5em;">🌟</span>
+                        <div>
+                            <strong>Science Project</strong>
+                            <div>Excellent robotics design</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin: 15px 0; padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 8px;">
+                        <span style="font-size: 1.5em;">📈</span>
+                        <div>
+                            <strong>Rapid Improvement</strong>
+                            <div>+15% in 2 weeks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMMUNICATION PANEL -->
+        <div class="communication-panel">
+            <h2 class="tech-heading">💬 Recent Communications</h2>
+            <div class="message-list">
+                <div class="message-item unread">
+                    <div style="display: flex; justify-content: between; align-items: start; gap: 15px;">
+                        <div style="font-size: 2em;">👩‍🏫</div>
+                        <div style="flex: 1;">
+                            <strong>Mrs. Ndlovu - Mathematics</strong>
+                            <div>Lerato showed excellent problem-solving skills in today's algebra class. She's mastering quadratic equations quickly!</div>
+                            <small style="color: var(--cyber-blue);">Today, 2:30 PM</small>
+                        </div>
+                        <button class="tech-btn" style="padding: 8px 16px;">Reply</button>
+                    </div>
+                </div>
+                
+                <div class="message-item">
+                    <div style="display: flex; justify-content: between; align-items: start; gap: 15px;">
+                        <div style="font-size: 2em;">👨‍🏫</div>
+                        <div style="flex: 1;">
+                            <strong>Mr. van der Merwe - Science</strong>
+                            <div>Reminder: Science fair project due next Friday. Lerato's robotics design is coming along well!</div>
+                            <small style="color: var(--cyber-blue);">Yesterday, 4:15 PM</small>
+                        </div>
+                        <button class="tech-btn" style="padding: 8px 16px;">Reply</button>
+                    </div>
+                </div>
+                
+                <div class="message-item">
+                    <div style="display: flex; justify-content: between; align-items: start; gap: 15px;">
+                        <div style="font-size: 2em;">🏫</div>
+                        <div style="flex: 1;">
+                            <strong>School Administration</strong>
+                            <div>Parent-Teacher conferences scheduled for next month. Please book your preferred time slot.</div>
+                            <small style="color: var(--cyber-blue);">2 days ago</small>
+                        </div>
+                        <button class="tech-btn" style="padding: 8px 16px;">Book Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <textarea placeholder="Type your message here..." style="width: 100%; height: 100px; background: var(--dark-space); border: 1px solid #2A2A2A; border-radius: 8px; padding: 15px; color: white; font-family: 'Exo 2', sans-serif;"></textarea>
+                <button class="tech-btn" style="margin-top: 10px;">Send Message</button>
+            </div>
+        </div>
+
+        <!-- MEETING SCHEDULE -->
+        <div class="meeting-schedule">
+            <h2 class="tech-heading">📅 Upcoming Meetings & Events</h2>
+            <div style="margin-top: 20px;">
+                <div class="schedule-item">
+                    <div class="schedule-time">15 Nov<br>14:00</div>
+                    <div style="flex: 1;">
+                        <strong>Mathematics Progress Review</strong>
+                        <div>With Mrs. Ndlovu - Room 204</div>
+                    </div>
+                    <button class="tech-btn" style="padding: 8px 16px;">Join</button>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="schedule-time">18 Nov<br>10:00</div>
+                    <div style="flex: 1;">
+                        <strong>Science Fair Preparation</strong>
+                        <div>Robotics project consultation</div>
+                    </div>
+                    <button class="tech-btn" style="padding: 8px 16px;">Join</button>
+                </div>
+                
+                <div class="schedule-item">
+                    <div class="schedule-time">22 Nov<br>15:30</div>
+                    <div style="flex: 1;">
+                        <strong>Quarterly Parent-Teacher Conference</strong>
+                        <div>Comprehensive progress review</div>
+                    </div>
+                    <button class="tech-btn" style="padding: 8px 16px;">Reschedule</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AD SPOT -->
+        <div class="ad-children-spot" style="margin: 40px 0;">
+            <div style="color: var(--cyber-blue); font-weight: 600;">Sponsored Education Resource</div>
+            <div>🌟 Powered by KDConcepts</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="tech-footer">
+        <div style="text-align: center;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Portal Functions
+        function sendMessage() {
+            showNotification('💬 Open message composer to contact teachers', 'info');
+        }
+
+        function viewProgress() {
+            showNotification('📊 Loading detailed academic progress report...', 'info');
+        }
+
+        function scheduleMeeting() {
+            showNotification('📅 Opening meeting scheduler...', 'info');
+        }
+
+        function viewAttendance() {
+            showNotification('✅ Loading attendance records...', 'info');
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(0, 255, 65, 0.9)' : 
+                           'rgba(0, 212, 255, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                max-width: 300px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+
+        // Mark messages as read when clicked
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.message-item');
+            messages.forEach(message => {
+                message.addEventListener('click', function() {
+                    this.classList.remove('unread');
+                });
+            });
+            
+            // Add live notification indicator
+            createNotificationIndicator();
+        });
+
+        function createNotificationIndicator() {
+            const indicator = document.createElement('div');
+            indicator.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                width: 12px;
+                height: 12px;
+                background: var(--neon-red);
+                border-radius: 50%;
+                z-index: 10001;
+                animation: pulse 2s infinite;
+            `;
+            document.body.appendChild(indicator);
+        }
+    </script>
+</body>
+</html>

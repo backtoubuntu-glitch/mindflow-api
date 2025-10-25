@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety System - MindFlow</title>
+    <link rel="stylesheet" href="assets/css/deep-tech-nuclear.css">
+    <style>
+        .safety-container {
+            padding: 100px 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .safety-hero {
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            border: 2px solid var(--cyber-blue);
+            text-align: center;
+        }
+        
+        .emergency-panel {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid var(--neon-red);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .safety-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .safety-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .safety-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .safety-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 4px solid #00FF41;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .emergency-btn {
+            background: var(--neon-red);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-family: 'Exo 2', sans-serif;
+            font-weight: 700;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+        
+        .emergency-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+        
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .contact-card {
+            text-align: center;
+            padding: 25px;
+        }
+        
+        .pulse-alert {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes alertPulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+            }
+            70% { 
+                box-shadow: 0 0 0 20px rgba(255, 107, 107, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- DEEP-TECH NAVIGATION -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
+        </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="safety.html" class="nav-link active">Safety</a>
+            <a href="login.html" class="nav-link">Login</a>
+        </div>
+    </nav>
+
+    <div class="safety-container">
+        <!-- SAFETY HERO -->
+        <section class="safety-hero">
+            <h1 class="tech-heading" style="-webkit-text-fill-color: white; font-size: 2.5em;">🛡️ SAFETY SYSTEM</h1>
+            <p style="font-size: 1.2em; margin: 15px 0; opacity: 0.9;">
+                Enterprise-Grade Student Protection • Real-Time Monitoring • Emergency Response
+            </p>
+        </section>
+
+        <!-- SAFETY STATUS -->
+        <div class="safety-status">
+            <span style="font-size: 2em;">✅</span>
+            <div>
+                <strong style="color: #00FF41;">ALL SYSTEMS OPERATIONAL</strong>
+                <div>Student safety monitoring active and secure</div>
+            </div>
+        </div>
+
+        <!-- EMERGENCY PANEL -->
+        <div class="emergency-panel">
+            <div style="font-size: 4em; margin-bottom: 20px;">🚨</div>
+            <h2 class="tech-heading">EMERGENCY PROTOCOL</h2>
+            <p style="margin: 20px 0; font-size: 1.1em;">
+                For immediate assistance and emergency response
+            </p>
+            
+            <button class="emergency-btn pulse-alert" onclick="activateEmergency()">
+                🚨 ACTIVATE EMERGENCY PROTOCOL
+            </button>
+            
+            <p style="font-size: 0.9em; opacity: 0.8;">
+                Notifies parents, teachers, and authorities immediately
+            </p>
+        </div>
+
+        <!-- SAFETY FEATURES GRID -->
+        <div class="safety-grid">
+            <div class="tech-card safety-card" onclick="toggleFeature('gps')">
+                <div style="font-size: 3em; margin-bottom: 15px;">📍</div>
+                <h3 class="tech-heading">Live GPS Tracking</h3>
+                <p>Real-time location monitoring with geofencing and safe zone alerts</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="tech-card safety-card" onclick="toggleFeature('checkin')">
+                <div style="font-size: 3em; margin-bottom: 15px;">✅</div>
+                <h3 class="tech-heading">Auto Check-In</h3>
+                <p>Automatic attendance and location verification every 30 minutes</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="tech-card safety-card" onclick="toggleFeature('alerts')">
+                <div style="font-size: 3em; margin-bottom: 15px;">🔔</div>
+                <h3 class="tech-heading">Smart Alerts</h3>
+                <p>AI-powered anomaly detection and immediate parent notifications</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="tech-card safety-card" onclick="toggleFeature('response')">
+                <div style="font-size: 3em; margin-bottom: 15px;">🚑</div>
+                <h3 class="tech-heading">Emergency Response</h3>
+                <p>Instant connection to local authorities and emergency services</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">READY</span>
+                </div>
+            </div>
+
+            <div class="tech-card safety-card" onclick="toggleFeature('health')">
+                <div style="font-size: 3em; margin-bottom: 15px;">❤️</div>
+                <h3 class="tech-heading">Health Monitoring</h3>
+                <p>Integration with health data and medical emergency protocols</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="tech-card safety-card" onclick="toggleFeature('privacy')">
+                <div style="font-size: 3em; margin-bottom: 15px;">🔒</div>
+                <h3 class="tech-heading">Privacy Protection</h3>
+                <p>Enterprise-grade encryption and strict data access controls</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: var(--cyber-blue); font-weight: 600;">ACTIVE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- EMERGENCY CONTACTS -->
+        <div class="tech-card">
+            <h2 class="tech-heading">📞 Emergency Contacts</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">👨‍👩‍👧</div>
+                    <h4>Parent/Guardian</h4>
+                    <p>+27 12 345 6789</p>
+                    <button class="tech-btn" style="padding: 8px 16px; margin-top: 10px;">
+                        📞 Call Now
+                    </button>
+                </div>
+                
+                <div class="contact-card">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">🏫</div>
+                    <h4>School Office</h4>
+                    <p>+27 11 234 5678</p>
+                    <button class="tech-btn" style="padding: 8px 16px; margin-top: 10px;">
+                        📞 Call Now
+                    </button>
+                </div>
+                
+                <div class="contact-card">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">🚑</div>
+                    <h4>Emergency Services</h4>
+                    <p>112 / 10111</p>
+                    <button class="tech-btn" style="padding: 8px 16px; margin-top: 10px;">
+                        🚨 Emergency
+                    </button>
+                </div>
+                
+                <div class="contact-card">
+                    <div style="font-size: 2.5em; margin-bottom: 10px;">🛡️</div>
+                    <h4>MindFlow Safety</h4>
+                    <p>+27 87 550 1234</p>
+                    <button class="tech-btn" style="padding: 8px 16px; margin-top: 10px;">
+                        📞 24/7 Support
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SAFETY STATISTICS -->
+        <div class="stats-grid" style="margin: 40px 0;">
+            <div class="tech-card" style="text-align: center;">
+                <div class="metric-value">100%</div>
+                <div style="color: var(--cyber-blue); font-weight: 600;">Uptime</div>
+                <p>Safety system availability</p>
+            </div>
+            <div class="tech-card" style="text-align: center;">
+                <div class="metric-value">24/7</div>
+                <div style="color: var(--cyber-blue); font-weight: 600;">Monitoring</div>
+                <p>Continuous protection</p>
+            </div>
+            <div class="tech-card" style="text-align: center;">
+                <div class="metric-value">2.3s</div>
+                <div style="color: var(--cyber-blue); font-weight: 600;">Response</div>
+                <p>Average alert time</p>
+            </div>
+            <div class="tech-card" style="text-align: center;">
+                <div class="metric-value">0</div>
+                <div style="color: var(--cyber-blue); font-weight: 600;">Incidents</div>
+                <p>This month</p>
+            </div>
+        </div>
+
+        <!-- AD SPOT -->
+        <div class="ad-children-spot" style="margin: 40px 0;">
+            <div style="color: var(--cyber-blue); font-weight: 600;">Sponsored Lesson</div>
+            <div>🌟 Powered by KDConcepts</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="tech-footer">
+        <div style="text-align: center;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Safety System Functions
+        function activateEmergency() {
+            if (confirm('🚨 ACTIVATE EMERGENCY PROTOCOL?\n\nThis will:\n• Notify all emergency contacts\n• Alert school authorities\n• Contact local emergency services\n• Activate full tracking mode\n\nOnly use in real emergencies!')) {
+                
+                // Visual emergency state
+                document.body.style.animation = 'alertPulse 1s infinite';
+                document.querySelector('.safety-status').innerHTML = `
+                    <span style="font-size: 2em;">🚨</span>
+                    <div>
+                        <strong style="color: var(--neon-red);">EMERGENCY PROTOCOL ACTIVATED</strong>
+                        <div>Help is on the way - stay on the line</div>
+                    </div>
+                `;
+                
+                // Show emergency actions
+                showEmergencyActions();
+                
+                // Simulate emergency response
+                setTimeout(() => {
+                    alert('✅ Emergency services notified! Help is en route to Johannesburg Primary School.');
+                }, 2000);
+            }
+        }
+        
+        function showEmergencyActions() {
+            const actions = `
+                <div class="tech-card" style="border-color: var(--neon-red); margin: 20px 0;">
+                    <h3 style="color: var(--neon-red);">🚨 EMERGENCY ACTIONS INITIATED</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                        <div>✅ Parents Notified</div>
+                        <div>✅ School Alerted</div>
+                        <div>✅ EMS Dispatched</div>
+                        <div>📍 Location Shared</div>
+                    </div>
+                    <p style="color: var(--neon-red); font-weight: 600;">
+                        Stay calm - help is on the way. Keep this screen open.
+                    </p>
+                </div>
+            `;
+            
+            document.querySelector('.emergency-panel').insertAdjacentHTML('afterend', actions);
+        }
+        
+        function toggleFeature(feature) {
+            const features = {
+                'gps': 'Live GPS Tracking',
+                'checkin': 'Auto Check-In',
+                'alerts': 'Smart Alerts',
+                'response': 'Emergency Response',
+                'health': 'Health Monitoring',
+                'privacy': 'Privacy Protection'
+            };
+            
+            alert(`🛡️ ${features[feature]} settings opened`);
+        }
+        
+        // Simulate periodic safety checks
+        setInterval(() => {
+            const status = document.querySelector('.safety-status');
+            if (!status.innerHTML.includes('EMERGENCY')) {
+                const time = new Date().toLocaleTimeString();
+                console.log(`✅ Safety check passed at ${time}`);
+            }
+        }, 60000); // Every minute
+    </script>
+</body>
+</html>

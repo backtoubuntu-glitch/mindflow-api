@@ -1,0 +1,15 @@
+{
+  "name": "mindflow-ai-platform",
+  "version": "1.0.0",
+  "description": "Enterprise AI Education Platform for African Students",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "dev": "echo 'Run with live server'"
+  },
+  "keywords": ["education", "ai", "africa", "edtech"],
+  "author": "MindTech Industries",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}

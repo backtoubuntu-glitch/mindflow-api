@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   - type: web
     name: mindflow-ai-backend
@@ -9,4 +10,17 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
+=======
+services:
+  - type: web
+    name: mindflow-ai-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+>>>>>>> 47e74d6862922efadb4373ca2a0a2a41fcbfc6e0
         value: 10000

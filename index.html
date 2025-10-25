@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindFlow</title>
+    <link rel="stylesheet" href="assets/css/deep-tech-nuclear.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, var(--tech-black) 0%, var(--dark-space) 100%);
+            color: var(--pure-white);
+            padding: 140px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        
+        .main-heading {
+            font-size: 4.5em;
+            margin-bottom: 30px;
+            animation: slideIn 1s ease-out;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: slideIn 1s ease-out 0.4s both;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+        }
+        
+        .ad-children-spot {
+            margin: 30px 0;
+            padding: 15px;
+            border-top: 1px solid #2A2A2A;
+            text-align: center;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- DEEP-TECH NAVIGATION -->
+    <nav class="tech-navbar">
+        <div class="nav-brand">
+            <span class="brain-icon">🧠</span>
+            <span class="brand-main">MindFlow</span>
+            <span class="brand-sub">Powered by MindTech</span>
+        </div>
+        <div class="tech-nav-links">
+            <a href="index.html" class="nav-link active">Home</a>
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="curriculum.html" class="nav-link">Khensani AI</a>
+            <a href="chess.html" class="nav-link">Chess</a>
+            <a href="safety.html" class="nav-link">Safety</a>
+            <a href="login.html" class="nav-link">Login</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="main-heading tech-heading">MindFlow</h1>
+            <div class="cta-buttons">
+                <button class="tech-btn" onclick="window.location.href='dashboard.html'" style="padding: 15px 30px; font-size: 1.1em;">
+                    🚀 LAUNCH PLATFORM
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES GRID -->
+    <section class="features-grid">
+        <div class="tech-card">
+            <div class="feature-icon">🤖</div>
+            <h3 class="tech-heading">Khensani AI</h3>
+            <p>Voice-enabled AI tutor with personalized learning assistance.</p>
+        </div>
+        
+        <div class="tech-card">
+            <div class="feature-icon">🛡️</div>
+            <h3 class="tech-heading">Safety System</h3>
+            <p>Real-time tracking and emergency response for student protection.</p>
+        </div>
+        
+        <div class="tech-card">
+            <div class="feature-icon">📊</div>
+            <h3 class="tech-heading">Live Dashboard</h3>
+            <p>Advanced tracking and analytics for parents and teachers.</p>
+        </div>
+
+        <div class="tech-card">
+            <div class="feature-icon">💼</div>
+            <h3 class="tech-heading">Corporate Portal</h3>
+            <p>Partnership opportunities and impact measurement.</p>
+        </div>
+
+        <div class="tech-card">
+            <div class="feature-icon">🌍</div>
+            <h3 class="tech-heading">African Focus</h3>
+            <p>Curriculum designed for African contexts and innovation.</p>
+        </div>
+
+        <div class="tech-card">
+            <div class="feature-icon">🚀</div>
+            <h3 class="tech-heading">Enterprise Ready</h3>
+            <p>Scalable platform supporting thousands of concurrent users.</p>
+        </div>
+    </section>
+
+    <!-- AD SPOT -->
+    <div class="ad-children-spot">
+        <div style="color: var(--cyber-blue); font-weight: 600;">Sponsored Lesson</div>
+        <div>🌟 Powered by KDConcepts</div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="tech-footer">
+        <div style="text-align: center;">
+            <div class="nav-brand" style="justify-content: center; margin-bottom: 20px;">
+                <span class="brain-icon">🧠</span>
+                <span class="brand-main">MindFlow</span>
+                <span class="brand-sub">Powered by MindTech</span>
+            </div>
+            <div class="copyright">
+                © 2025 MindTech Industries. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
