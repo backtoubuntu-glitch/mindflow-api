@@ -1,0 +1,297 @@
+/* MINDFLOW DEEP-TECH NUCLEAR CSS - UNBREAKABLE */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* NUCLEAR RESET - FORCES DEEP-TECH EVERYWHERE */
+* {
+  font-family: 'Exo 2', sans-serif !important;
+  box-sizing: border-box !important;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  font-family: 'Exo 2', sans-serif !important;
+  background: #0A0A0A !important;
+  color: #FFFFFF !important;
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* DEEP-TECH COLOR SYSTEM */
+:root {
+  --tech-black: #0A0A0A;
+  --cyber-blue: #00D4FF;
+  --neon-red: #FF6B6B;
+  --matrix-green: #00FF41;
+  --dark-space: #0F0F0F;
+  --card-surface: #1A1A1A;
+  --pure-white: #FFFFFF;
+  --tech-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+/* FORCE BACKGROUNDS */
+body {
+  background: var(--tech-black) !important;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(255, 107, 107, 0.05) 0%, transparent 20%) !important;
+}
+
+/* TYPOGRAPHY ENFORCEMENT - NO MF BRANDING */
+h1, h2, h3, h4, h5, h6, p, span, div, a, button, input, textarea, label, li, td, th {
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+.tech-heading {
+  font-family: 'Exo 2', sans-serif !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, var(--cyber-blue), #B026FF) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  position: relative;
+  display: inline-block;
+}
+
+.tech-subheading {
+  font-family: 'Exo 2', sans-serif !important;
+  font-weight: 600 !important;
+  color: var(--cyber-blue) !important;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* NAVIGATION - CONSISTENT ACROSS ALL PAGES */
+.tech-navbar {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid #2A2A2A !important;
+  padding: 1rem 2rem !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.nav-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.brain-icon {
+  font-size: 28px !important;
+  background: linear-gradient(135deg, var(--cyber-blue), #B026FF) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  animation: pulseGlow 2s infinite !important;
+}
+
+.brand-main {
+  font-family: 'Exo 2', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 1.8em !important;
+  background: linear-gradient(135deg, var(--cyber-blue), var(--pure-white)) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  /* NO MF - ONLY MINDFLOW */
+  content: "MindFlow" !important;
+}
+
+.brand-sub {
+  font-family: 'Exo 2', sans-serif !important;
+  font-size: 0.7em !important;
+  opacity: 0.8 !important;
+  margin-left: 8px !important;
+  /* CORRECT BRANDING */
+  content: "Powered by MindTech" !important;
+}
+
+.tech-nav-links {
+  display: flex !important;
+  gap: 20px !important;
+  align-items: center !important;
+}
+
+.nav-link {
+  color: var(--pure-white) !important;
+  text-decoration: none !important;
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+.nav-link:hover, .nav-link.active {
+  background: rgba(0, 212, 255, 0.1) !important;
+  box-shadow: var(--tech-glow) !important;
+}
+
+/* CARDS & CONTAINERS */
+.tech-card {
+  background: var(--card-surface) !important;
+  border: 1px solid #2A2A2A !important;
+  border-radius: 12px !important;
+  padding: 25px !important;
+  transition: all 0.3s ease !important;
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+.tech-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: var(--tech-glow) !important;
+  border-color: var(--cyber-blue) !important;
+}
+
+/* BUTTONS */
+.tech-btn {
+  background: linear-gradient(135deg, var(--cyber-blue), #B026FF) !important;
+  color: var(--pure-white) !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-family: 'Exo 2', sans-serif !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.tech-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--tech-glow) !important;
+}
+
+/* ANIMATIONS */
+@keyframes pulseGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 5px var(--cyber-blue)) !important;
+  }
+  50% { 
+    filter: drop-shadow(0 0 15px var(--cyber-blue)) !important;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* METRICS & DATA VISUALIZATION */
+.metric-value {
+  font-size: 2.5em !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, var(--cyber-blue), #B026FF) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+/* FOOTER */
+.tech-footer {
+  background: var(--tech-black) !important;
+  border-top: 1px solid #2A2A2A !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+  margin-top: 60px !important;
+}
+
+.copyright {
+  margin-top: 30px !important;
+  padding-top: 20px !important;
+  border-top: 1px solid #2A2A2A !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.9em !important;
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+/* AD SPOTS */
+.ad-children-spot {
+  margin: 30px 0 !important;
+  padding: 15px !important;
+  border-top: 1px solid #2A2A2A !important;
+  text-align: center !important;
+  font-size: 0.9em !important;
+  opacity: 0.8 !important;
+  font-family: 'Exo 2', sans-serif !important;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .tech-navbar {
+    flex-direction: column !important;
+    gap: 15px !important;
+    padding: 1rem !important;
+  }
+  
+  .tech-nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+}
+
+/* CHESS BOARD SPECIFIC FIXES */
+.chess-board-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-direction: column !important;
+}
+
+#chessBoard {
+  display: grid !important;
+  grid-template-columns: repeat(8, 1fr) !important;
+  grid-template-rows: repeat(8, 1fr) !important;
+  width: 400px !important;
+  height: 400px !important;
+  margin: 0 auto !important;
+  border: 3px solid var(--cyber-blue) !important;
+  border-radius: 8px !important;
+  position: relative !important;
+  background: var(--dark-space) !important;
+}
+
+.chess-square {
+  width: 50px !important;
+  height: 50px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  transition: all 0.3s ease !important;
+  font-size: 24px !important;
+}
+
+.chess-piece {
+  font-size: 2em !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  text-shadow: 0 0 10px currentColor !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* BRANDING ENFORCEMENT - REMOVE ANY MF */
+[class*="mf"], [class*="MF"], [class*="Mf"] {
+  display: none !important;
+}
+
+/* Ensure all text content has correct branding */
+*:contains("MF"), *:contains("mf") {
+  font-family: 'Exo 2', sans-serif !important;
+}
